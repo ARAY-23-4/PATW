@@ -814,17 +814,39 @@
         }
 
         // --- Live Ticker Logic ---
+        let isDonating = false; // Flag to track if user is in donation section
+
         function startLiveTicker() {
             const ticker = document.getElementById('liveTicker');
             const flagEl = document.getElementById('tickerFlag');
             const amtEl = document.getElementById('tickerAmount');
             const countryEl = document.getElementById('tickerCountry');
             const causeEl = document.getElementById('tickerCause');
+            
+            // Setup Observer for Donation Section
+            const donateSection = document.getElementById('donate');
+            if (donateSection) {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        isDonating = entry.isIntersecting;
+                        if (isDonating) {
+                            ticker.classList.remove('show'); // Hide immediately if visible
+                        }
+                    });
+                }, { threshold: 0.1 });
+                observer.observe(donateSection);
+            }
 
             // Initial delay
             setTimeout(showNextDonation, 3000);
 
             function showNextDonation() {
+                // STOP if user is donating
+                if (isDonating) {
+                    setTimeout(showNextDonation, 2000); // Check again in 2s
+                    return; 
+                }
+
                 // Pick random data
                 const randomCountry = countriesData[Math.floor(Math.random() * countriesData.length)];
                 const randomAmount = [10, 25, 50, 100, 20][Math.floor(Math.random() * 5)];
