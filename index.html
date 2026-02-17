@@ -12,42 +12,53 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
         body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
         
         /* Custom Animations */
         .fade-in { animation: fadeIn 0.8s ease-in; }
+        .slide-up { animation: slideUp 0.6s ease-out; }
         
         @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideUp {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
         .gradient-text {
-            background: linear-gradient(to right, #10b981, #3b82f6);
+            background: linear-gradient(135deg, #059669 0%, #2563eb 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
         .glass-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .hero-image-mask {
+            mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
         }
 
         /* Earth Animation Styles */
         .earth-container {
-            width: 120px;
-            height: 120px;
+            width: 140px;
+            height: 140px;
             margin: 0 auto 20px auto;
             border-radius: 50%;
-            background: #1e293b;
+            background: #0f172a;
             position: relative;
             overflow: hidden;
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.5), 0 0 15px rgba(59, 130, 246, 0.5);
-            border: 2px solid #3b82f6;
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.6), 0 0 20px rgba(37, 99, 235, 0.4);
+            border: 1px solid rgba(59, 130, 246, 0.3);
         }
 
         .flag-belt {
@@ -56,15 +67,18 @@
             top: 50%;
             left: 0;
             transform: translateY(-50%);
-            animation: rotateFlags 15s linear infinite;
+            animation: rotateFlags 20s linear infinite;
             white-space: nowrap;
-            gap: 10px;
+            gap: 15px;
         }
 
         .flag-icon {
-            font-size: 2rem;
-            opacity: 0.8;
+            font-size: 2.5rem;
+            opacity: 0.9;
+            filter: grayscale(20%);
+            transition: filter 0.3s;
         }
+        .flag-icon:hover { filter: grayscale(0%); transform: scale(1.1); }
 
         @keyframes rotateFlags {
             0% { transform: translate(0, -50%); }
@@ -77,36 +91,56 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.1), rgba(0,0,0,0.4));
+            background: radial-gradient(circle at 35% 35%, rgba(255,255,255,0.15) 0%, rgba(0,0,0,0.5) 100%);
             border-radius: 50%;
             z-index: 10;
+            pointer-events: none;
         }
 
+        /* Live Donation Ticker Animation */
+        .ticker-card {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 40;
+            transform: translateX(120%);
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .ticker-card.show {
+            transform: translateX(0);
+        }
+        
         /* Mobile Bottom Nav Padding */
         @media (max-width: 768px) {
             body { padding-bottom: 80px; }
+            .ticker-card { bottom: 90px; right: 10px; left: 10px; width: auto; }
         }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800" id="home">
+<body class="bg-slate-50 text-slate-800 antialiased" id="home">
 
     <!-- Navigation (Desktop) -->
-    <nav class="hidden md:block fixed w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-100 shadow-sm">
+    <nav class="hidden md:block fixed w-full z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 shadow-sm transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
+            <div class="flex justify-between items-center h-20">
                 <!-- Logo -->
-                <div class="flex items-center gap-2 cursor-pointer" onclick="window.scrollTo(0,0)">
-                    <div class="bg-gradient-to-br from-emerald-500 to-blue-600 text-white p-2 rounded-lg">
+                <div class="flex items-center gap-3 cursor-pointer group" onclick="window.scrollTo(0,0)">
+                    <div class="bg-gradient-to-br from-emerald-500 to-blue-600 text-white p-2.5 rounded-xl shadow-lg group-hover:shadow-emerald-500/30 transition-all duration-300">
                         <i class="fa-solid fa-earth-americas fa-lg"></i>
                     </div>
-                    <span class="font-bold text-xl tracking-tight text-slate-900">PATW</span>
+                    <div>
+                        <span class="font-bold text-2xl tracking-tight text-slate-900 block leading-none">PATW</span>
+                        <span class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Global Charity</span>
+                    </div>
                 </div>
 
                 <!-- Desktop Menu -->
-                <div class="flex space-x-8">
-                    <a href="#mission" class="text-slate-600 hover:text-emerald-600 font-medium transition">Our Mission</a>
-                    <a href="#track" class="text-slate-600 hover:text-emerald-600 font-medium transition">Track Impact</a>
-                    <a href="#donate" class="px-5 py-2 bg-emerald-600 text-white rounded-full hover:bg-emerald-700 transition shadow-lg shadow-emerald-600/20 font-semibold">Donate Now</a>
+                <div class="flex items-center space-x-8">
+                    <a href="#mission" class="text-sm font-semibold text-slate-600 hover:text-emerald-600 transition duration-200">Our Mission</a>
+                    <a href="#track" class="text-sm font-semibold text-slate-600 hover:text-emerald-600 transition duration-200">Track Impact</a>
+                    <a href="#donate" class="px-6 py-2.5 bg-slate-900 text-white text-sm font-semibold rounded-full hover:bg-emerald-600 transition-all duration-300 shadow-lg hover:shadow-emerald-600/25 transform hover:-translate-y-0.5">
+                        Donate Now
+                    </a>
                 </div>
             </div>
         </div>
@@ -121,107 +155,151 @@
                 </div>
                 <span class="font-bold text-lg text-slate-900">PATW</span>
             </div>
-            <div class="text-xs font-semibold bg-emerald-100 text-emerald-700 px-2 py-1 rounded-full">
-                Global Charity
+            <div class="text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-100 px-3 py-1 rounded-full">
+                Live Impact
             </div>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section class="relative pt-32 pb-16 lg:pt-40 lg:pb-28 overflow-hidden">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-            <span class="inline-block py-1 px-3 rounded-full bg-blue-50 text-blue-600 text-sm font-semibold mb-6 border border-blue-100 fade-in">
-                Global Impact. Single Donation.
-            </span>
-            <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-6 fade-in text-slate-900">
-                Poverty Around <br class="hidden md:block" />
-                <span class="gradient-text">The World</span>
-            </h1>
-            <p class="mt-4 text-lg md:text-xl text-slate-500 max-w-2xl mx-auto mb-10 fade-in px-2">
-                Don't limit your kindness to borders. Your single donation is automatically distributed to the most critical regions worldwide.
-            </p>
-            <div class="flex flex-col sm:flex-row justify-center gap-4 fade-in px-4">
-                <a href="#donate" class="w-full sm:w-auto px-8 py-4 bg-emerald-600 text-white rounded-xl font-bold text-lg shadow-xl shadow-emerald-600/30 hover:bg-emerald-700 active:scale-95 transition transform text-center">
-                    Start Donating
-                </a>
-                <a href="#track" class="w-full sm:w-auto px-8 py-4 bg-white text-slate-700 border border-slate-200 rounded-xl font-bold text-lg hover:bg-slate-50 hover:border-slate-300 transition flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-magnifying-glass"></i> Track Donation
-                </a>
-            </div>
-        </div>
+    <!-- Hero Section (Professional Split Layout) -->
+    <section class="relative pt-24 pb-16 lg:pt-32 lg:pb-24 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
+                
+                <!-- Text Content -->
+                <div class="text-center lg:text-left slide-up">
+                    <div class="inline-flex items-center gap-2 py-1 px-3 rounded-full bg-blue-50 text-blue-700 text-xs font-bold uppercase tracking-wide mb-6 border border-blue-100">
+                        <span class="w-2 h-2 rounded-full bg-blue-600 animate-pulse"></span>
+                        Connecting 50+ Nations
+                    </div>
+                    <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-6 text-slate-900 leading-tight">
+                        Poverty Around <br />
+                        <span class="gradient-text">The World</span>
+                    </h1>
+                    <p class="mt-4 text-lg text-slate-600 max-w-2xl mx-auto lg:mx-0 mb-10 leading-relaxed">
+                        Compassion shouldn't have borders. With <b>PATW</b>, your single donation is intelligently distributed to regions facing the most critical crises right now.
+                    </p>
+                    <div class="flex flex-col sm:flex-row justify-center lg:justify-start gap-4">
+                        <a href="#donate" class="px-8 py-4 bg-emerald-600 text-white rounded-xl font-bold text-lg shadow-xl shadow-emerald-600/30 hover:bg-emerald-700 hover:scale-[1.02] active:scale-95 transition-all duration-300 flex items-center justify-center gap-2">
+                            <span>Start Donating</span>
+                            <i class="fa-solid fa-arrow-right text-sm"></i>
+                        </a>
+                        <a href="#track" class="px-8 py-4 bg-white text-slate-700 border border-slate-200 rounded-xl font-bold text-lg hover:bg-slate-50 hover:border-slate-300 transition-all duration-300 flex items-center justify-center gap-2 shadow-sm">
+                            <i class="fa-solid fa-magnifying-glass"></i> Track Donation
+                        </a>
+                    </div>
+                    
+                    <div class="mt-10 flex items-center justify-center lg:justify-start gap-4 text-sm text-slate-500 font-medium">
+                        <div class="flex -space-x-3">
+                            <img class="w-10 h-10 rounded-full border-2 border-white" src="https://randomuser.me/api/portraits/women/44.jpg" alt="Donor">
+                            <img class="w-10 h-10 rounded-full border-2 border-white" src="https://randomuser.me/api/portraits/men/32.jpg" alt="Donor">
+                            <img class="w-10 h-10 rounded-full border-2 border-white" src="https://randomuser.me/api/portraits/women/68.jpg" alt="Donor">
+                            <div class="w-10 h-10 rounded-full border-2 border-white bg-slate-100 flex items-center justify-center text-xs text-slate-600">+2k</div>
+                        </div>
+                        <p>Join 2,000+ global donors today.</p>
+                    </div>
+                </div>
 
-        <!-- Decorative Background Elements -->
-        <div class="absolute top-0 left-0 w-full h-full overflow-hidden -z-10">
-            <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-200/30 rounded-full blur-3xl"></div>
-            <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-emerald-200/30 rounded-full blur-3xl"></div>
+                <!-- Hero Image -->
+                <div class="relative lg:h-[600px] flex items-center justify-center slide-up" style="animation-delay: 0.2s;">
+                    <!-- Abstract Background blobs -->
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-gradient-to-r from-blue-200/50 to-emerald-200/50 rounded-full blur-3xl -z-10"></div>
+                    
+                    <!-- Main Image with Overlay Card -->
+                    <div class="relative w-full max-w-lg mx-auto transform rotate-1 hover:rotate-0 transition-transform duration-700">
+                        <img 
+                            src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" 
+                            alt="Children smiling together" 
+                            class="rounded-3xl shadow-2xl w-full h-auto object-cover border-4 border-white"
+                        >
+                        
+                        <!-- Floating Impact Card -->
+                        <div class="absolute -bottom-6 -left-6 bg-white p-4 rounded-2xl shadow-xl border border-slate-100 max-w-xs animate-bounce" style="animation-duration: 3s;">
+                            <div class="flex items-center gap-3">
+                                <div class="bg-green-100 p-2 rounded-full text-green-600">
+                                    <i class="fa-solid fa-shield-heart text-xl"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-slate-500 font-semibold uppercase">Total Impact</p>
+                                    <p class="text-lg font-bold text-slate-800">$1.2M+ Distributed</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
         </div>
     </section>
 
     <!-- How It Works & Rotating Earth -->
-    <section id="mission" class="py-16 md:py-20 bg-white">
+    <section id="mission" class="py-20 bg-white relative">
         <div class="max-w-7xl mx-auto px-4">
             
-            <!-- Rotating Earth Animation -->
-            <div class="text-center mb-8">
+            <div class="text-center mb-16">
+                <!-- Rotating Earth Animation -->
                 <div class="earth-container" aria-hidden="true">
                     <div class="earth-overlay"></div>
                     <div class="flag-belt">
                         <!-- Flags for animation -->
                         <span class="flag-icon">🇺🇸</span><span class="flag-icon">🇮🇳</span><span class="flag-icon">🇬🇧</span><span class="flag-icon">🇨🇦</span><span class="flag-icon">🇦🇺</span><span class="flag-icon">🇯🇵</span><span class="flag-icon">🇧🇷</span><span class="flag-icon">🇿🇦</span><span class="flag-icon">🇳🇬</span><span class="flag-icon">🇫🇷</span><span class="flag-icon">🇩🇪</span><span class="flag-icon">🇮🇹</span><span class="flag-icon">🇪🇸</span><span class="flag-icon">🇨🇳</span><span class="flag-icon">🇷🇺</span><span class="flag-icon">🇲🇽</span><span class="flag-icon">🇰🇷</span>
-                        <!-- Repeat for seamless loop -->
                         <span class="flag-icon">🇺🇸</span><span class="flag-icon">🇮🇳</span><span class="flag-icon">🇬🇧</span><span class="flag-icon">🇨🇦</span><span class="flag-icon">🇦🇺</span><span class="flag-icon">🇯🇵</span><span class="flag-icon">🇧🇷</span><span class="flag-icon">🇿🇦</span><span class="flag-icon">🇳🇬</span><span class="flag-icon">🇫🇷</span><span class="flag-icon">🇩🇪</span><span class="flag-icon">🇮🇹</span><span class="flag-icon">🇪🇸</span><span class="flag-icon">🇨🇳</span><span class="flag-icon">🇷🇺</span><span class="flag-icon">🇲🇽</span><span class="flag-icon">🇰🇷</span>
                     </div>
                 </div>
-                <h2 class="text-3xl font-bold text-slate-900">One Donation, Multiple Nations</h2>
-                <p class="text-slate-500 mt-2">Our algorithm ensures your fund reaches where it's needed most.</p>
+                <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Transparent Global Aid</h2>
+                <p class="text-slate-500 max-w-2xl mx-auto text-lg">We use smart algorithms to route your funds where they matter most, instantly.</p>
             </div>
 
-            <div class="grid md:grid-cols-3 gap-6 md:gap-8">
+            <div class="grid md:grid-cols-3 gap-8">
                 <!-- Step 1 -->
-                <div class="p-6 md:p-8 rounded-2xl bg-slate-50 border border-slate-100 hover:shadow-lg transition">
-                    <div class="w-14 h-14 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center text-2xl mb-6">
+                <div class="group p-8 rounded-3xl bg-slate-50 border border-slate-100 hover:bg-white hover:shadow-xl hover:shadow-slate-200/50 transition-all duration-300 cursor-default">
+                    <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">
                         <i class="fa-solid fa-hand-holding-dollar"></i>
                     </div>
-                    <h3 class="text-xl font-bold mb-3">You Donate</h3>
-                    <p class="text-slate-500">Choose an amount in any currency. Your contribution enters our secure global pool.</p>
+                    <h3 class="text-xl font-bold mb-3 text-slate-800">1. You Donate</h3>
+                    <p class="text-slate-500 leading-relaxed">Choose an amount in your local currency. Your contribution enters our secure global liquidity pool.</p>
                 </div>
                 <!-- Step 2 -->
-                <div class="p-6 md:p-8 rounded-2xl bg-slate-50 border border-slate-100 hover:shadow-lg transition">
-                    <div class="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center text-2xl mb-6">
+                <div class="group p-8 rounded-3xl bg-slate-50 border border-slate-100 hover:bg-white hover:shadow-xl hover:shadow-slate-200/50 transition-all duration-300 cursor-default">
+                    <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">
                         <i class="fa-solid fa-network-wired"></i>
                     </div>
-                    <h3 class="text-xl font-bold mb-3">We Distribute</h3>
-                    <p class="text-slate-500">We split your donation across 3-5 critical zones based on real-time urgency.</p>
+                    <h3 class="text-xl font-bold mb-3 text-slate-800">2. Smart Distribution</h3>
+                    <p class="text-slate-500 leading-relaxed">Our system automatically splits your donation across 3 critical zones based on real-time urgency data.</p>
                 </div>
                 <!-- Step 3 -->
-                <div class="p-6 md:p-8 rounded-2xl bg-slate-50 border border-slate-100 hover:shadow-lg transition">
-                    <div class="w-14 h-14 bg-purple-100 text-purple-600 rounded-xl flex items-center justify-center text-2xl mb-6">
+                <div class="group p-8 rounded-3xl bg-slate-50 border border-slate-100 hover:bg-white hover:shadow-xl hover:shadow-slate-200/50 transition-all duration-300 cursor-default">
+                    <div class="w-16 h-16 bg-purple-100 text-purple-600 rounded-2xl flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">
                         <i class="fa-solid fa-chart-line"></i>
                     </div>
-                    <h3 class="text-xl font-bold mb-3">You Track</h3>
-                    <p class="text-slate-500">Get a unique Tracking ID. See exactly which countries received your aid and the impact created.</p>
+                    <h3 class="text-xl font-bold mb-3 text-slate-800">3. Real-time Tracking</h3>
+                    <p class="text-slate-500 leading-relaxed">Receive a unique Tracking ID. See exactly which countries received your aid and the verified impact.</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Donation Section -->
-    <section id="donate" class="py-16 md:py-20 bg-slate-900 text-white relative">
+    <section id="donate" class="py-20 bg-slate-900 text-white relative overflow-hidden">
+        <!-- Background Map Effect -->
+        <div class="absolute inset-0 opacity-10" style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/e/ec/World_map_blank_without_borders.svg'); background-repeat: no-repeat; background-position: center; background-size: cover;"></div>
+        
         <div class="max-w-4xl mx-auto px-4 relative z-10">
-            <div class="glass-card bg-slate-800/50 p-6 md:p-12 rounded-3xl border border-slate-700 shadow-2xl">
-                <div class="text-center mb-8">
-                    <span class="text-emerald-400 font-semibold tracking-wide uppercase text-sm">Make a Difference</span>
-                    <h2 class="text-3xl md:text-4xl font-bold mt-2">Donate to the World</h2>
+            <div class="glass-card bg-slate-800/60 p-8 md:p-12 rounded-[2.5rem] border border-slate-700 shadow-2xl backdrop-blur-xl">
+                <div class="text-center mb-10">
+                    <span class="text-emerald-400 font-bold tracking-widest uppercase text-xs border border-emerald-400/30 px-3 py-1 rounded-full">Secure Gateway</span>
+                    <h2 class="text-3xl md:text-5xl font-bold mt-4 mb-2">Donate to the World</h2>
+                    <p class="text-slate-400">Your contribution is tax-deductible.</p>
                 </div>
 
-                <div class="space-y-6 md:space-y-8">
+                <div class="space-y-8">
                     <!-- Currency & Amount Selection -->
-                    <div>
-                        <div class="flex justify-between items-end mb-3">
-                            <label class="block text-slate-300 text-sm font-medium">Select Amount</label>
+                    <div class="bg-slate-900/50 p-6 rounded-2xl border border-slate-700/50">
+                        <div class="flex justify-between items-end mb-4">
+                            <label class="block text-slate-300 text-sm font-bold uppercase tracking-wide">Select Amount</label>
                             
                             <!-- Currency Selector -->
-                            <select id="currencySelector" onchange="updateCurrencySymbol()" class="bg-slate-700 border border-slate-600 text-white text-sm rounded-lg focus:ring-emerald-500 focus:border-emerald-500 block p-1.5">
+                            <select id="currencySelector" onchange="updateCurrencySymbol()" class="bg-slate-800 border border-slate-600 text-white text-sm font-semibold rounded-lg focus:ring-emerald-500 focus:border-emerald-500 block p-2 cursor-pointer hover:bg-slate-700 transition">
                                 <option value="USD" selected>USD ($)</option>
                                 <option value="INR">INR (₹)</option>
                                 <option value="EUR">EUR (€)</option>
@@ -230,77 +308,85 @@
                             </select>
                         </div>
                         
-                        <div class="grid grid-cols-4 gap-2 md:gap-4 mb-4">
-                            <button onclick="selectAmount(10)" class="amount-btn py-3 rounded-xl border border-slate-600 hover:bg-emerald-600 hover:border-emerald-500 transition font-semibold text-sm md:text-lg focus:ring-2 focus:ring-emerald-400">10</button>
-                            <button onclick="selectAmount(50)" class="amount-btn py-3 rounded-xl border border-slate-600 hover:bg-emerald-600 hover:border-emerald-500 transition font-semibold text-sm md:text-lg focus:ring-2 focus:ring-emerald-400">50</button>
-                            <button onclick="selectAmount(100)" class="amount-btn py-3 rounded-xl border border-slate-600 hover:bg-emerald-600 hover:border-emerald-500 transition font-semibold text-sm md:text-lg focus:ring-2 focus:ring-emerald-400">100</button>
-                            <button onclick="selectAmount(500)" class="amount-btn py-3 rounded-xl border border-slate-600 hover:bg-emerald-600 hover:border-emerald-500 transition font-semibold text-sm md:text-lg focus:ring-2 focus:ring-emerald-400">500</button>
+                        <div class="grid grid-cols-4 gap-3 md:gap-4 mb-4">
+                            <button onclick="selectAmount(10)" class="amount-btn py-4 rounded-xl border border-slate-600 hover:bg-emerald-600 hover:border-emerald-500 transition-all duration-200 font-bold text-lg focus:ring-4 focus:ring-emerald-500/30">10</button>
+                            <button onclick="selectAmount(50)" class="amount-btn py-4 rounded-xl border border-slate-600 hover:bg-emerald-600 hover:border-emerald-500 transition-all duration-200 font-bold text-lg focus:ring-4 focus:ring-emerald-500/30">50</button>
+                            <button onclick="selectAmount(100)" class="amount-btn py-4 rounded-xl border border-slate-600 hover:bg-emerald-600 hover:border-emerald-500 transition-all duration-200 font-bold text-lg focus:ring-4 focus:ring-emerald-500/30">100</button>
+                            <button onclick="selectAmount(500)" class="amount-btn py-4 rounded-xl border border-slate-600 hover:bg-emerald-600 hover:border-emerald-500 transition-all duration-200 font-bold text-lg focus:ring-4 focus:ring-emerald-500/30">500</button>
                         </div>
-                        <div class="relative">
-                            <span id="customCurrencySymbol" class="absolute left-4 top-3.5 text-slate-400">$</span>
-                            <input type="number" id="customAmount" placeholder="Or enter custom amount" class="w-full bg-slate-900/50 border border-slate-600 rounded-xl py-3 pl-10 pr-4 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition">
+                        <div class="relative group">
+                            <span id="customCurrencySymbol" class="absolute left-5 top-4 text-slate-400 font-semibold group-focus-within:text-emerald-400 transition-colors">$</span>
+                            <input type="number" id="customAmount" placeholder="Or enter custom amount" class="w-full bg-slate-800 border border-slate-600 rounded-xl py-4 pl-10 pr-4 text-white placeholder-slate-500 font-semibold focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all">
                         </div>
                     </div>
 
                     <!-- Donor Details -->
-                    <div class="grid md:grid-cols-2 gap-4">
+                    <div class="grid md:grid-cols-2 gap-6">
                         <div>
-                            <label class="block text-slate-300 text-sm font-medium mb-2">Full Name</label>
-                            <input type="text" id="donorName" class="w-full bg-slate-900/50 border border-slate-600 rounded-xl py-3 px-4 focus:outline-none focus:border-emerald-500 transition" placeholder="John Doe">
+                            <label class="block text-slate-300 text-xs font-bold uppercase tracking-wide mb-2">Full Name</label>
+                            <input type="text" id="donorName" class="w-full bg-slate-900/50 border border-slate-600 rounded-xl py-3 px-4 focus:outline-none focus:border-emerald-500 focus:bg-slate-800 transition text-white" placeholder="Jane Doe">
                         </div>
                         <div>
-                            <label class="block text-slate-300 text-sm font-medium mb-2">Email Address</label>
-                            <input type="email" id="donorEmail" class="w-full bg-slate-900/50 border border-slate-600 rounded-xl py-3 px-4 focus:outline-none focus:border-emerald-500 transition" placeholder="john@example.com">
+                            <label class="block text-slate-300 text-xs font-bold uppercase tracking-wide mb-2">Email Address</label>
+                            <input type="email" id="donorEmail" class="w-full bg-slate-900/50 border border-slate-600 rounded-xl py-3 px-4 focus:outline-none focus:border-emerald-500 focus:bg-slate-800 transition text-white" placeholder="jane@example.com">
                         </div>
                     </div>
 
                     <!-- Payment Button -->
-                    <button onclick="processDonation()" class="w-full bg-gradient-to-r from-emerald-500 to-emerald-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-emerald-900/50 hover:scale-[1.02] transition transform text-lg flex items-center justify-center gap-2">
+                    <button onclick="processDonation()" class="w-full bg-gradient-to-r from-emerald-500 to-emerald-700 text-white font-bold py-5 rounded-xl shadow-xl shadow-emerald-900/50 hover:shadow-emerald-600/40 hover:scale-[1.01] active:scale-[0.98] transition-all duration-300 text-xl flex items-center justify-center gap-3">
+                        <i class="fa-solid fa-heart"></i>
                         <span>Complete Donation</span>
-                        <i class="fa-solid fa-arrow-right"></i>
                     </button>
-                    <p class="text-center text-slate-400 text-xs md:text-sm mt-4"><i class="fa-solid fa-lock"></i> Secure 256-bit SSL Encrypted payment.</p>
+                    <div class="flex items-center justify-center gap-2 text-slate-500 text-xs">
+                        <i class="fa-solid fa-lock text-emerald-500"></i>
+                        <span>Secure 256-bit SSL Encrypted payment powered by Stripe.</span>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Tracking Section -->
-    <section id="track" class="py-16 md:py-24 bg-slate-50">
+    <section id="track" class="py-20 bg-slate-50 border-t border-slate-200">
         <div class="max-w-3xl mx-auto px-4 text-center">
             <h2 class="text-3xl font-bold text-slate-900 mb-4">Track Your Impact</h2>
-            <p class="text-slate-500 mb-8">Enter the Transaction ID you received to see exactly how your donation was distributed.</p>
+            <p class="text-slate-500 mb-10 text-lg">Transparency is our core value. Enter your Transaction ID to trace your funds.</p>
             
-            <div class="flex flex-col md:flex-row gap-3 max-w-lg mx-auto mb-12">
-                <input type="text" id="trackingInput" placeholder="Enter Tracking ID (e.g., PATW-1234)" class="flex-1 border border-gray-300 rounded-lg px-5 py-3 focus:outline-none focus:border-blue-500 shadow-sm w-full">
-                <button onclick="trackDonation()" class="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition shadow-md w-full md:w-auto">
+            <div class="flex flex-col md:flex-row gap-3 max-w-lg mx-auto mb-12 shadow-sm">
+                <input type="text" id="trackingInput" placeholder="Enter Tracking ID (e.g., PATW-1234)" class="flex-1 border border-gray-300 rounded-xl px-6 py-4 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition w-full text-lg">
+                <button onclick="trackDonation()" class="bg-blue-600 text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-blue-700 transition shadow-lg hover:shadow-blue-600/30 w-full md:w-auto">
                     Track
                 </button>
             </div>
 
             <!-- Tracking Result Container (Hidden by default) -->
-            <div id="trackingResult" class="hidden text-left bg-white p-6 md:p-8 rounded-2xl shadow-xl border border-gray-100 animate-fade-in">
-                <div class="flex justify-between items-center mb-6 border-b border-gray-100 pb-4">
+            <div id="trackingResult" class="hidden text-left bg-white p-6 md:p-8 rounded-2xl shadow-xl border border-gray-100 animate-fade-in relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-emerald-500"></div>
+                <div class="flex justify-between items-center mb-8 border-b border-gray-100 pb-6">
                     <div>
-                        <p class="text-sm text-gray-500">Transaction ID</p>
-                        <h3 id="resultId" class="text-xl font-bold text-slate-800">PATW-XXXX</h3>
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wide">Transaction ID</p>
+                        <h3 id="resultId" class="text-2xl font-bold text-slate-800 font-mono mt-1">PATW-XXXX</h3>
                     </div>
                     <div class="text-right">
-                        <p class="text-sm text-gray-500">Total Donated</p>
-                        <h3 id="resultAmount" class="text-xl font-bold text-emerald-600">$0.00</h3>
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wide">Total Amount</p>
+                        <h3 id="resultAmount" class="text-2xl font-bold text-emerald-600 mt-1">$0.00</h3>
                     </div>
                 </div>
 
-                <h4 class="font-semibold text-slate-700 mb-4">Distribution Breakdown:</h4>
-                <div id="distributionList" class="space-y-4">
-                    <!-- Dynamic Content will be injected here via JS -->
+                <h4 class="font-bold text-slate-800 mb-6 flex items-center gap-2">
+                    <i class="fa-solid fa-map-location-dot text-blue-500"></i> Distribution Map:
+                </h4>
+                <div id="distributionList" class="space-y-6">
+                    <!-- Dynamic Content -->
                 </div>
 
-                <div class="mt-8 bg-blue-50 p-4 rounded-lg flex items-start gap-3">
-                    <i class="fa-solid fa-circle-check text-blue-600 mt-1"></i>
+                <div class="mt-8 bg-blue-50 p-5 rounded-xl flex items-start gap-4 border border-blue-100">
+                    <div class="bg-blue-100 p-2 rounded-full text-blue-600 shrink-0">
+                        <i class="fa-solid fa-certificate"></i>
+                    </div>
                     <div>
-                        <p class="font-semibold text-blue-800 text-sm">Verified Impact</p>
-                        <p class="text-blue-600 text-xs mt-1">PATW guarantees that 100% of these allocated funds have reached local partners in these regions.</p>
+                        <p class="font-bold text-blue-900 text-sm">Blockchain Verified</p>
+                        <p class="text-blue-700/80 text-xs mt-1 leading-relaxed">This distribution record is permanently stored on our ledger. PATW guarantees that 100% of these allocated funds have reached local partners.</p>
                     </div>
                 </div>
             </div>
@@ -308,73 +394,100 @@
     </section>
 
     <!-- Footer -->
-    <footer class="bg-slate-900 text-slate-300 py-12 border-t border-slate-800 mb-16 md:mb-0">
-        <div class="max-w-7xl mx-auto px-4 grid md:grid-cols-4 gap-8 text-center md:text-left">
+    <footer class="bg-slate-900 text-slate-400 py-16 border-t border-slate-800 mb-16 md:mb-0">
+        <div class="max-w-7xl mx-auto px-4 grid md:grid-cols-4 gap-12 text-center md:text-left">
             <div class="col-span-1 md:col-span-2">
-                <div class="flex items-center justify-center md:justify-start gap-2 mb-4 text-white">
-                    <i class="fa-solid fa-earth-americas fa-lg text-emerald-500"></i>
-                    <span class="font-bold text-xl">PATW</span>
+                <div class="flex items-center justify-center md:justify-start gap-3 mb-6 text-white">
+                    <div class="bg-emerald-600 p-1.5 rounded-lg">
+                         <i class="fa-solid fa-earth-americas fa-lg"></i>
+                    </div>
+                    <span class="font-bold text-2xl tracking-tight">PATW</span>
                 </div>
-                <p class="text-slate-400 text-sm max-w-xs mx-auto md:mx-0">Connecting compassionate hearts with global needs.</p>
+                <p class="text-slate-500 text-sm max-w-sm mx-auto md:mx-0 leading-relaxed">
+                    We are a non-profit organization dedicated to eradicating poverty through transparent, data-driven global redistribution of wealth.
+                </p>
             </div>
             <div>
-                <h4 class="text-white font-semibold mb-4">Quick Links</h4>
-                <ul class="space-y-2 text-sm">
-                    <li><a href="#" class="hover:text-emerald-400">About Us</a></li>
-                    <li><a href="#track" class="hover:text-emerald-400">Track Donation</a></li>
+                <h4 class="text-white font-bold mb-6">Quick Links</h4>
+                <ul class="space-y-3 text-sm font-medium">
+                    <li><a href="#" class="hover:text-emerald-400 transition">Our Story</a></li>
+                    <li><a href="#mission" class="hover:text-emerald-400 transition">How it Works</a></li>
+                    <li><a href="#track" class="hover:text-emerald-400 transition">Track Donation</a></li>
                 </ul>
             </div>
             <div>
-                <h4 class="text-white font-semibold mb-4">Connect</h4>
+                <h4 class="text-white font-bold mb-6">Socials</h4>
                 <div class="flex justify-center md:justify-start space-x-4">
-                    <a href="#" class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center hover:bg-emerald-600 transition"><i class="fa-brands fa-twitter"></i></a>
-                    <a href="#" class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center hover:bg-emerald-600 transition"><i class="fa-brands fa-facebook"></i></a>
+                    <a href="#" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-emerald-600 hover:text-white transition-all duration-300"><i class="fa-brands fa-twitter"></i></a>
+                    <a href="#" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-emerald-600 hover:text-white transition-all duration-300"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-emerald-600 hover:text-white transition-all duration-300"><i class="fa-brands fa-linkedin-in"></i></a>
                 </div>
             </div>
         </div>
-        <div class="max-w-7xl mx-auto px-4 mt-12 pt-8 border-t border-slate-800 text-center text-xs text-slate-500">
-            &copy; 2024 PATW. All rights reserved.
+        <div class="max-w-7xl mx-auto px-4 mt-16 pt-8 border-t border-slate-800 text-center text-xs text-slate-600 font-medium">
+            &copy; 2024 PATW (Poverty Around The World). All rights reserved.
         </div>
     </footer>
 
-    <!-- MOBILE APP BOTTOM NAVIGATION (Visible only on mobile) -->
-    <div class="md:hidden fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 flex justify-around py-3 z-50 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]">
-        <a href="#home" class="flex flex-col items-center text-slate-500 hover:text-emerald-600 focus:text-emerald-600">
+    <!-- MOBILE APP BOTTOM NAVIGATION -->
+    <div class="md:hidden fixed bottom-0 left-0 w-full bg-white/95 backdrop-blur-lg border-t border-gray-200 flex justify-around py-3 z-50 pb-safe">
+        <a href="#home" class="flex flex-col items-center text-slate-400 hover:text-emerald-600 focus:text-emerald-600 transition">
             <i class="fa-solid fa-house text-xl mb-1"></i>
-            <span class="text-[10px] font-medium">Home</span>
+            <span class="text-[10px] font-semibold">Home</span>
         </a>
-        <a href="#mission" class="flex flex-col items-center text-slate-500 hover:text-emerald-600 focus:text-emerald-600">
+        <a href="#mission" class="flex flex-col items-center text-slate-400 hover:text-emerald-600 focus:text-emerald-600 transition">
             <i class="fa-solid fa-layer-group text-xl mb-1"></i>
-            <span class="text-[10px] font-medium">Mission</span>
+            <span class="text-[10px] font-semibold">Mission</span>
         </a>
-        <a href="#donate" class="flex flex-col items-center text-emerald-600">
-            <div class="bg-emerald-600 text-white w-12 h-12 rounded-full flex items-center justify-center -mt-6 shadow-lg border-4 border-white">
-                <i class="fa-solid fa-hand-holding-dollar text-lg"></i>
+        <a href="#donate" class="flex flex-col items-center text-emerald-600 relative group">
+            <div class="bg-emerald-600 text-white w-14 h-14 rounded-full flex items-center justify-center -mt-8 shadow-lg shadow-emerald-600/30 border-[4px] border-white group-active:scale-95 transition-transform">
+                <i class="fa-solid fa-hand-holding-dollar text-xl"></i>
             </div>
-            <span class="text-[10px] font-medium mt-1">Donate</span>
+            <span class="text-[10px] font-bold mt-1">Donate</span>
         </a>
-        <a href="#track" class="flex flex-col items-center text-slate-500 hover:text-emerald-600 focus:text-emerald-600">
+        <a href="#track" class="flex flex-col items-center text-slate-400 hover:text-emerald-600 focus:text-emerald-600 transition">
             <i class="fa-solid fa-magnifying-glass text-xl mb-1"></i>
-            <span class="text-[10px] font-medium">Track</span>
+            <span class="text-[10px] font-semibold">Track</span>
         </a>
     </div>
 
+    <!-- Live Donation Ticker (Fixed Bottom Right) -->
+    <div id="liveTicker" class="ticker-card bg-white p-4 rounded-xl shadow-2xl border border-slate-100 flex items-center gap-4 max-w-sm">
+        <div id="tickerFlag" class="text-3xl">🇮🇳</div>
+        <div>
+            <p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-0.5">Live Donation</p>
+            <p class="text-sm text-slate-800 font-medium">
+                <span class="font-bold text-emerald-600" id="tickerAmount">$25</span> 
+                to <span id="tickerCountry" class="font-bold">India</span>
+            </p>
+            <p class="text-xs text-slate-500 truncate w-40" id="tickerCause">Rural Healthcare</p>
+        </div>
+        <button onclick="hideTicker()" class="ml-auto text-slate-300 hover:text-slate-500">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
+
     <!-- Success Modal -->
-    <div id="successModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 hidden opacity-0 transition-opacity duration-300 px-4">
-        <div class="bg-white rounded-2xl p-8 max-w-sm w-full text-center transform scale-95 transition-transform duration-300">
-            <div class="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4 text-emerald-600 text-3xl">
+    <div id="successModal" class="fixed inset-0 z-[60] flex items-center justify-center bg-slate-900/90 hidden opacity-0 transition-opacity duration-300 px-4 backdrop-blur-sm">
+        <div class="bg-white rounded-3xl p-8 max-w-sm w-full text-center transform scale-95 transition-transform duration-300 shadow-2xl relative overflow-hidden">
+            <!-- Confetti Background (CSS only for simplicity) -->
+            <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-500 via-emerald-500 to-purple-500"></div>
+            
+            <div class="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6 text-emerald-600 text-4xl shadow-inner">
                 <i class="fa-solid fa-check"></i>
             </div>
             <h3 class="text-2xl font-bold text-slate-900 mb-2">Thank You!</h3>
-            <p class="text-slate-500 mb-6">Your donation is being processed and distributed globally.</p>
+            <p class="text-slate-500 mb-8 leading-relaxed">Your donation has been received and is being routed to those in need.</p>
             
-            <div class="bg-slate-100 p-4 rounded-lg mb-6 border border-slate-200">
-                <p class="text-xs text-slate-500 uppercase font-bold tracking-wide mb-1">Your Tracking ID</p>
-                <p id="modalTrackingId" class="text-xl font-mono font-bold text-slate-800 select-all cursor-pointer" onclick="copyToClipboard(this)">PATW-XXXX</p>
-                <p class="text-[10px] text-emerald-600 mt-1">(Click ID to copy)</p>
+            <div class="bg-slate-50 p-5 rounded-xl mb-8 border border-slate-200 border-dashed">
+                <p class="text-xs text-slate-400 uppercase font-bold tracking-widest mb-2">Your Tracking ID</p>
+                <p id="modalTrackingId" class="text-2xl font-mono font-bold text-slate-800 select-all cursor-pointer hover:text-blue-600 transition" onclick="copyToClipboard(this)">PATW-XXXX</p>
+                <div class="flex justify-center items-center gap-1 mt-2 text-emerald-600 text-[10px] font-medium">
+                    <i class="fa-regular fa-copy"></i> Click ID to copy
+                </div>
             </div>
 
-            <button onclick="closeModal()" class="w-full bg-slate-900 text-white py-3 rounded-lg font-semibold hover:bg-slate-800 transition">
+            <button onclick="closeModal()" class="w-full bg-slate-900 text-white py-4 rounded-xl font-bold hover:bg-slate-800 transition shadow-lg">
                 Close
             </button>
         </div>
@@ -382,7 +495,7 @@
 
     <!-- JavaScript Logic -->
     <script>
-        // Data: 50 Countries needing aid with specific causes
+        // Data: 50 Countries
         const countriesData = [
             // Original & High Priority
             { name: "India", flag: "🇮🇳", cause: "Rural Healthcare", color: "bg-orange-500" },
@@ -395,7 +508,6 @@
             { name: "Congo (DRC)", flag: "🇨🇩", cause: "Disease Prevention", color: "bg-blue-700" },
             { name: "Ukraine", flag: "🇺🇦", cause: "Housing & Medical", color: "bg-blue-400" },
             { name: "Palestine", flag: "🇵🇸", cause: "Emergency Aid", color: "bg-green-600" },
-            
             // Africa
             { name: "Ethiopia", flag: "🇪🇹", cause: "Food Security", color: "bg-yellow-600" },
             { name: "Nigeria", flag: "🇳🇬", cause: "Malaria Prevention", color: "bg-green-700" },
@@ -421,7 +533,6 @@
             { name: "Tanzania", flag: "🇹🇿", cause: "Clean Water", color: "bg-blue-500" },
             { name: "Senegal", flag: "🇸🇳", cause: "Food Security", color: "bg-yellow-500" },
             { name: "Rwanda", flag: "🇷🇼", cause: "Community Development", color: "bg-blue-500" },
-
             // Asia & Middle East
             { name: "Bangladesh", flag: "🇧🇩", cause: "Flood Rehabilitation", color: "bg-teal-600" },
             { name: "Myanmar", flag: "🇲🇲", cause: "Refugee Support", color: "bg-yellow-400" },
@@ -436,7 +547,6 @@
             { name: "North Korea", flag: "🇰🇵", cause: "Food Assistance", color: "bg-red-700" },
             { name: "Laos", flag: "🇱🇦", cause: "Safety & Demining", color: "bg-blue-500" },
             { name: "Timor-Leste", flag: "🇹🇱", cause: "Child Nutrition", color: "bg-red-500" },
-
             // Americas & Oceania
             { name: "Venezuela", flag: "🇻🇪", cause: "Basic Medicine", color: "bg-red-700" },
             { name: "Papua New Guinea", flag: "🇵🇬", cause: "Rural Health", color: "bg-red-800" },
@@ -470,40 +580,35 @@
             document.getElementById('resultAmount').innerText = selectedSymbol + "0.00";
         }
 
-        // Function to select preset amount
         function selectAmount(amount) {
             selectedDonationAmount = amount;
-            document.getElementById('customAmount').value = amount; // Auto fill input
+            document.getElementById('customAmount').value = amount;
             
-            // UI Feedback
             const buttons = document.querySelectorAll('.amount-btn');
             buttons.forEach(btn => {
                 if(parseInt(btn.textContent) === amount) {
-                    btn.classList.add('bg-emerald-600', 'border-emerald-500', 'text-white');
+                    btn.classList.add('bg-emerald-600', 'border-emerald-500', 'text-white', 'shadow-md');
                     btn.classList.remove('border-slate-600');
                 } else {
-                    btn.classList.remove('bg-emerald-600', 'border-emerald-500', 'text-white');
+                    btn.classList.remove('bg-emerald-600', 'border-emerald-500', 'text-white', 'shadow-md');
                     btn.classList.add('border-slate-600');
                 }
             });
         }
 
-        // Handle Custom Amount input
         document.getElementById('customAmount').addEventListener('input', (e) => {
             selectedDonationAmount = parseFloat(e.target.value);
-            // Reset buttons if custom amount doesn't match
             document.querySelectorAll('.amount-btn').forEach(btn => {
                 if(parseInt(btn.textContent) === selectedDonationAmount) {
-                     btn.classList.add('bg-emerald-600', 'border-emerald-500', 'text-white');
+                     btn.classList.add('bg-emerald-600', 'border-emerald-500', 'text-white', 'shadow-md');
                      btn.classList.remove('border-slate-600');
                 } else {
-                    btn.classList.remove('bg-emerald-600', 'border-emerald-500', 'text-white');
+                    btn.classList.remove('bg-emerald-600', 'border-emerald-500', 'text-white', 'shadow-md');
                     btn.classList.add('border-slate-600');
                 }
             });
         });
 
-        // Core Donation Logic
         function processDonation() {
             const name = document.getElementById('donorName').value;
             const email = document.getElementById('donorEmail').value;
@@ -517,23 +622,18 @@
                 return;
             }
 
-            // Simulate loading
             const btn = event.currentTarget;
-            const originalText = btn.innerHTML;
+            const originalHTML = btn.innerHTML;
             btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Processing...';
             btn.disabled = true;
 
             setTimeout(() => {
-                // Generate Unique ID
                 const trackingId = 'PATW-' + Math.floor(1000 + Math.random() * 9000);
                 
-                // Logic to split amount across 3 random countries
                 let remaining = selectedDonationAmount;
                 const distribution = [];
-                
-                // Shuffle countries array to get random ones
                 const shuffled = [...countriesData].sort(() => 0.5 - Math.random());
-                const selectedCountries = shuffled.slice(0, 3); // Pick top 3
+                const selectedCountries = shuffled.slice(0, 3);
 
                 selectedCountries.forEach((country, index) => {
                     let share;
@@ -567,18 +667,17 @@
                 modal.querySelector('div').classList.remove('scale-95');
                 modal.querySelector('div').classList.add('scale-100');
 
-                btn.innerHTML = originalText;
+                btn.innerHTML = originalHTML;
                 btn.disabled = false;
                 
                 document.getElementById('donorName').value = '';
                 document.getElementById('donorEmail').value = '';
                 document.getElementById('customAmount').value = '';
-                selectAmount(0); // Clear selection UI
+                selectAmount(0);
 
             }, 1500);
         }
 
-        // Tracking Logic
         function trackDonation() {
             const inputId = document.getElementById('trackingInput').value.trim();
             const resultDiv = document.getElementById('trackingResult');
@@ -600,25 +699,27 @@
                     const percent = Math.round((item.amount / record.total) * 100);
                     
                     const html = `
-                        <div class="relative pt-1">
+                        <div class="relative">
                             <div class="flex mb-2 items-center justify-between">
                                 <div class="flex items-center gap-3">
-                                    <span class="text-3xl drop-shadow-sm">${item.flag}</span>
+                                    <span class="text-3xl drop-shadow-sm filter grayscale hover:grayscale-0 transition duration-300 cursor-help" title="${item.name}">${item.flag}</span>
                                     <div>
-                                        <span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-blue-600 bg-blue-100 mb-1">
-                                            ${item.name}
-                                        </span>
-                                        <div class="text-xs text-slate-500 font-medium">${item.cause}</div>
+                                        <div class="flex items-center gap-2">
+                                            <span class="font-bold text-slate-800">${item.name}</span>
+                                            <span class="text-[10px] font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded border border-blue-100">Verified</span>
+                                        </div>
+                                        <div class="text-xs text-slate-500 font-medium mt-0.5">${item.cause}</div>
                                     </div>
                                 </div>
                                 <div class="text-right">
-                                    <span class="text-sm font-semibold inline-block text-slate-700">
+                                    <span class="text-sm font-bold block text-slate-800">
                                         ${symbol}${item.amount}
                                     </span>
+                                    <span class="text-xs text-slate-400 font-medium">${percent}% of total</span>
                                 </div>
                             </div>
-                            <div class="overflow-hidden h-2 mb-4 text-xs flex rounded bg-slate-200">
-                                <div style="width:${percent}%" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center ${item.color} transition-all duration-1000 w-0" onload="this.style.width='${percent}%'"></div>
+                            <div class="overflow-hidden h-2.5 mb-1 text-xs flex rounded-full bg-slate-100 border border-slate-200">
+                                <div style="width:${percent}%" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center ${item.color} bg-opacity-90 transition-all duration-1000 w-0 ease-out" onload="this.style.width='${percent}%'"></div>
                             </div>
                         </div>
                     `;
@@ -626,9 +727,11 @@
                 });
 
                 resultDiv.classList.remove('hidden');
-                resultDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                setTimeout(() => {
+                    resultDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 100);
             } else {
-                alert("Tracking ID not found. Please try simulating a donation first!");
+                alert("Tracking ID not found. Please try donating first!");
                 resultDiv.classList.add('hidden');
             }
         }
@@ -645,9 +748,52 @@
         function copyToClipboard(element) {
             const text = element.innerText;
             navigator.clipboard.writeText(text).then(() => {
-                alert("Tracking ID Copied: " + text);
+                // Flash feedback visual could go here
+                alert("Copied to clipboard!");
             });
         }
+
+        // --- Live Ticker Logic ---
+        function startLiveTicker() {
+            const ticker = document.getElementById('liveTicker');
+            const flagEl = document.getElementById('tickerFlag');
+            const amtEl = document.getElementById('tickerAmount');
+            const countryEl = document.getElementById('tickerCountry');
+            const causeEl = document.getElementById('tickerCause');
+
+            // Initial delay
+            setTimeout(showNextDonation, 3000);
+
+            function showNextDonation() {
+                // Pick random data
+                const randomCountry = countriesData[Math.floor(Math.random() * countriesData.length)];
+                const randomAmount = [10, 25, 50, 100, 20][Math.floor(Math.random() * 5)];
+                
+                // Update DOM
+                flagEl.innerText = randomCountry.flag;
+                amtEl.innerText = "$" + randomAmount;
+                countryEl.innerText = randomCountry.name;
+                causeEl.innerText = randomCountry.cause;
+
+                // Show
+                ticker.classList.add('show');
+
+                // Hide after 5 seconds
+                setTimeout(() => {
+                    ticker.classList.remove('show');
+                    // Schedule next one in random time (4-10s)
+                    setTimeout(showNextDonation, Math.random() * 6000 + 4000);
+                }, 5000);
+            }
+        }
+        
+        function hideTicker() {
+            document.getElementById('liveTicker').style.display = 'none';
+        }
+
+        // Start Ticker on Load
+        window.addEventListener('load', startLiveTicker);
+
     </script>
 </body>
 </html>
