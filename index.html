@@ -56,7 +56,7 @@
             top: 50%;
             left: 0;
             transform: translateY(-50%);
-            animation: rotateFlags 10s linear infinite;
+            animation: rotateFlags 15s linear infinite;
             white-space: nowrap;
             gap: 10px;
         }
@@ -166,9 +166,9 @@
                 <div class="earth-container" aria-hidden="true">
                     <div class="earth-overlay"></div>
                     <div class="flag-belt">
-                        <!-- Duplicated flags for seamless infinite scroll -->
+                        <!-- Flags for animation -->
                         <span class="flag-icon">🇺🇸</span><span class="flag-icon">🇮🇳</span><span class="flag-icon">🇬🇧</span><span class="flag-icon">🇨🇦</span><span class="flag-icon">🇦🇺</span><span class="flag-icon">🇯🇵</span><span class="flag-icon">🇧🇷</span><span class="flag-icon">🇿🇦</span><span class="flag-icon">🇳🇬</span><span class="flag-icon">🇫🇷</span><span class="flag-icon">🇩🇪</span><span class="flag-icon">🇮🇹</span><span class="flag-icon">🇪🇸</span><span class="flag-icon">🇨🇳</span><span class="flag-icon">🇷🇺</span><span class="flag-icon">🇲🇽</span><span class="flag-icon">🇰🇷</span>
-                        <!-- Repeat -->
+                        <!-- Repeat for seamless loop -->
                         <span class="flag-icon">🇺🇸</span><span class="flag-icon">🇮🇳</span><span class="flag-icon">🇬🇧</span><span class="flag-icon">🇨🇦</span><span class="flag-icon">🇦🇺</span><span class="flag-icon">🇯🇵</span><span class="flag-icon">🇧🇷</span><span class="flag-icon">🇿🇦</span><span class="flag-icon">🇳🇬</span><span class="flag-icon">🇫🇷</span><span class="flag-icon">🇩🇪</span><span class="flag-icon">🇮🇹</span><span class="flag-icon">🇪🇸</span><span class="flag-icon">🇨🇳</span><span class="flag-icon">🇷🇺</span><span class="flag-icon">🇲🇽</span><span class="flag-icon">🇰🇷</span>
                     </div>
                 </div>
@@ -382,17 +382,71 @@
 
     <!-- JavaScript Logic -->
     <script>
-        // Data: Countries needing aid with specific causes
+        // Data: 50 Countries needing aid with specific causes
         const countriesData = [
-            { name: "South Sudan", flag: "🇸🇸", cause: "Emergency Food Aid", color: "bg-red-500" },
-            { name: "Yemen", flag: "🇾🇪", cause: "Medical Supplies", color: "bg-orange-500" },
-            { name: "India", flag: "🇭🇹", cause: "Shelter Construction", color: "bg-blue-500" },
-            { name: "Afghanistan", flag: "🇦🇫", cause: "Child Education", color: "bg-green-500" },
-            { name: "Madagascar", flag: "🇲🇬", cause: "Clean Water Access", color: "bg-cyan-500" },
-            { name: "Syria", flag: "🇸🇾", cause: "Winter Clothing", color: "bg-purple-500" },
+            // Original & High Priority
+            { name: "India", flag: "🇮🇳", cause: "Rural Healthcare", color: "bg-orange-500" },
+            { name: "South Sudan", flag: "🇸🇸", cause: "Emergency Food Aid", color: "bg-red-600" },
+            { name: "Yemen", flag: "🇾🇪", cause: "Medical Supplies", color: "bg-red-500" },
+            { name: "Afghanistan", flag: "🇦🇫", cause: "Child Education", color: "bg-green-600" },
+            { name: "Syria", flag: "🇸🇾", cause: "Winter Shelter", color: "bg-stone-600" },
+            { name: "Haiti", flag: "🇭🇹", cause: "Earthquake Relief", color: "bg-blue-600" },
             { name: "Somalia", flag: "🇸🇴", cause: "Drought Relief", color: "bg-yellow-500" },
-            { name: "Ukraine", flag: "🇺🇦", cause: "Medical & Housing", color: "bg-yellow-400" },
-            { name: "Palestine", flag: "🇵🇸", cause: "Emergency Aid", color: "bg-green-600" }
+            { name: "Congo (DRC)", flag: "🇨🇩", cause: "Disease Prevention", color: "bg-blue-700" },
+            { name: "Ukraine", flag: "🇺🇦", cause: "Housing & Medical", color: "bg-blue-400" },
+            { name: "Palestine", flag: "🇵🇸", cause: "Emergency Aid", color: "bg-green-600" },
+            
+            // Africa
+            { name: "Ethiopia", flag: "🇪🇹", cause: "Food Security", color: "bg-yellow-600" },
+            { name: "Nigeria", flag: "🇳🇬", cause: "Malaria Prevention", color: "bg-green-700" },
+            { name: "Madagascar", flag: "🇲🇬", cause: "Clean Water", color: "bg-red-400" },
+            { name: "Sudan", flag: "🇸🇩", cause: "Conflict Displacement", color: "bg-green-800" },
+            { name: "Mali", flag: "🇲🇱", cause: "Child Nutrition", color: "bg-yellow-500" },
+            { name: "Chad", flag: "🇹🇩", cause: "Water Access", color: "bg-blue-500" },
+            { name: "Mozambique", flag: "🇲🇿", cause: "Cyclone Recovery", color: "bg-teal-500" },
+            { name: "Niger", flag: "🇳🇪", cause: "Agricultural Aid", color: "bg-orange-400" },
+            { name: "Zimbabwe", flag: "🇿🇼", cause: "Food Distribution", color: "bg-yellow-700" },
+            { name: "Burkina Faso", flag: "🇧🇫", cause: "Clean Water", color: "bg-red-600" },
+            { name: "Kenya", flag: "🇰🇪", cause: "Drought Resilience", color: "bg-green-500" },
+            { name: "Uganda", flag: "🇺🇬", cause: "Refugee Education", color: "bg-yellow-600" },
+            { name: "Malawi", flag: "🇲🇼", cause: "School Supplies", color: "bg-red-500" },
+            { name: "Sierra Leone", flag: "🇸🇱", cause: "Maternal Health", color: "bg-green-400" },
+            { name: "Liberia", flag: "🇱🇷", cause: "School Infrastructure", color: "bg-red-600" },
+            { name: "Central African Republic", flag: "🇨🇫", cause: "Protection Services", color: "bg-yellow-500" },
+            { name: "Burundi", flag: "🇧🇮", cause: "Food Aid", color: "bg-green-600" },
+            { name: "Eritrea", flag: "🇪🇷", cause: "Water Access", color: "bg-blue-400" },
+            { name: "Libya", flag: "🇱🇾", cause: "Emergency Health", color: "bg-green-600" },
+            { name: "Angola", flag: "🇦🇴", cause: "Health Services", color: "bg-red-700" },
+            { name: "Zambia", flag: "🇿🇲", cause: "Education Access", color: "bg-green-600" },
+            { name: "Tanzania", flag: "🇹🇿", cause: "Clean Water", color: "bg-blue-500" },
+            { name: "Senegal", flag: "🇸🇳", cause: "Food Security", color: "bg-yellow-500" },
+            { name: "Rwanda", flag: "🇷🇼", cause: "Community Development", color: "bg-blue-500" },
+
+            // Asia & Middle East
+            { name: "Bangladesh", flag: "🇧🇩", cause: "Flood Rehabilitation", color: "bg-teal-600" },
+            { name: "Myanmar", flag: "🇲🇲", cause: "Refugee Support", color: "bg-yellow-400" },
+            { name: "Pakistan", flag: "🇵🇰", cause: "Flood Relief", color: "bg-emerald-600" },
+            { name: "Lebanon", flag: "🇱🇧", cause: "Economic Aid", color: "bg-red-500" },
+            { name: "Nepal", flag: "🇳🇵", cause: "Disaster Recovery", color: "bg-blue-600" },
+            { name: "Sri Lanka", flag: "🇱🇰", cause: "Crisis Support", color: "bg-yellow-500" },
+            { name: "Cambodia", flag: "🇰🇭", cause: "Clean Water", color: "bg-blue-500" },
+            { name: "Philippines", flag: "🇵🇭", cause: "Typhoon Relief", color: "bg-blue-400" },
+            { name: "Indonesia", flag: "🇮🇩", cause: "Disaster Prep", color: "bg-red-500" },
+            { name: "Iraq", flag: "🇮🇶", cause: "Rebuilding Homes", color: "bg-stone-500" },
+            { name: "North Korea", flag: "🇰🇵", cause: "Food Assistance", color: "bg-red-700" },
+            { name: "Laos", flag: "🇱🇦", cause: "Safety & Demining", color: "bg-blue-500" },
+            { name: "Timor-Leste", flag: "🇹🇱", cause: "Child Nutrition", color: "bg-red-500" },
+
+            // Americas & Oceania
+            { name: "Venezuela", flag: "🇻🇪", cause: "Basic Medicine", color: "bg-red-700" },
+            { name: "Papua New Guinea", flag: "🇵🇬", cause: "Rural Health", color: "bg-red-800" },
+            { name: "Guatemala", flag: "🇬🇹", cause: "Child Nutrition", color: "bg-cyan-500" },
+            { name: "Honduras", flag: "🇭🇳", cause: "Housing Aid", color: "bg-blue-400" },
+            { name: "El Salvador", flag: "🇸🇻", cause: "Youth Education", color: "bg-blue-500" },
+            { name: "Brazil", flag: "🇧🇷", cause: "Favelas Aid", color: "bg-green-500" },
+            { name: "Peru", flag: "🇵🇪", cause: "Cold Wave Relief", color: "bg-red-500" },
+            { name: "Bolivia", flag: "🇧🇴", cause: "Indigenous Support", color: "bg-yellow-500" },
+            { name: "Nicaragua", flag: "🇳🇮", cause: "Clean Water", color: "bg-blue-600" }
         ];
 
         let selectedDonationAmount = 0;
@@ -596,5 +650,4 @@
         }
     </script>
 </body>
-
 </html>
