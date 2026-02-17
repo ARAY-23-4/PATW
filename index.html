@@ -3,32 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PATW - Poverty Around The World</title>
+    <title>PATW - Poverty Around The World | Global Impact</title>
     
-    <!-- Tailwind CSS for Styling -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
         body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
         
-        /* Custom Animations */
-        .fade-in { animation: fadeIn 0.8s ease-in; }
-        .slide-up { animation: slideUp 0.6s ease-out; }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        .slideshow-container {
+            position: relative;
+            width: 100%;
+            height: 450px;
+            border-radius: 2rem;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
         }
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+
+        .slide {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            background-size: cover;
+            background-position: center;
         }
+
+        .slide.active { opacity: 1; }
 
         .gradient-text {
             background: linear-gradient(135deg, #059669 0%, #2563eb 100%);
@@ -36,68 +38,6 @@
             -webkit-text-fill-color: transparent;
         }
 
-        .glass-card {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        }
-
-        .hero-image-mask {
-            mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
-            -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
-        }
-
-        /* Earth Animation Styles */
-        .earth-container {
-            width: 140px;
-            height: 140px;
-            margin: 0 auto 20px auto;
-            border-radius: 50%;
-            background: #0f172a;
-            position: relative;
-            overflow: hidden;
-            box-shadow: inset 0 0 30px rgba(0,0,0,0.6), 0 0 20px rgba(37, 99, 235, 0.4);
-            border: 1px solid rgba(59, 130, 246, 0.3);
-        }
-
-        .flag-belt {
-            display: flex;
-            position: absolute;
-            top: 50%;
-            left: 0;
-            transform: translateY(-50%);
-            animation: rotateFlags 20s linear infinite;
-            white-space: nowrap;
-            gap: 15px;
-        }
-
-        .flag-icon {
-            font-size: 2.5rem;
-            opacity: 0.9;
-            filter: grayscale(20%);
-            transition: filter 0.3s;
-        }
-        .flag-icon:hover { filter: grayscale(0%); transform: scale(1.1); }
-
-        @keyframes rotateFlags {
-            0% { transform: translate(0, -50%); }
-            100% { transform: translate(-50%, -50%); }
-        }
-
-        .earth-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at 35% 35%, rgba(255,255,255,0.15) 0%, rgba(0,0,0,0.5) 100%);
-            border-radius: 50%;
-            z-index: 10;
-            pointer-events: none;
-        }
-
-        /* Live Donation Ticker Animation */
         .ticker-card {
             position: fixed;
             bottom: 20px;
@@ -106,124 +46,92 @@
             transform: translateX(120%);
             transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-        .ticker-card.show {
-            transform: translateX(0);
+        .ticker-card.show { transform: translateX(0); }
+
+        /* Flag specific style - Removing grayscale */
+        .track-flag {
+            font-size: 2.5rem;
+            filter: none !important;
+            transition: transform 0.3s;
         }
-        
-        /* Mobile Bottom Nav Padding */
+        .track-flag:hover { transform: scale(1.2); }
+
         @media (max-width: 768px) {
+            .slideshow-container { height: 300px; }
             body { padding-bottom: 80px; }
-            .ticker-card { bottom: 90px; right: 10px; left: 10px; width: auto; }
         }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 antialiased" id="home">
+<body class="bg-slate-50 text-slate-800 antialiased">
 
-    <!-- Navigation (Desktop) -->
-    <nav class="hidden md:block fixed w-full z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 shadow-sm transition-all duration-300">
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-20">
-                <!-- Logo -->
-                <div class="flex items-center gap-3 cursor-pointer group" onclick="window.scrollTo(0,0)">
-                    <div class="bg-gradient-to-br from-emerald-500 to-blue-600 text-white p-2.5 rounded-xl shadow-lg group-hover:shadow-emerald-500/30 transition-all duration-300">
+                <div class="flex items-center gap-3 cursor-pointer" onclick="window.scrollTo(0,0)">
+                    <div class="bg-gradient-to-br from-emerald-500 to-blue-600 text-white p-2.5 rounded-xl shadow-lg">
                         <i class="fa-solid fa-earth-americas fa-lg"></i>
                     </div>
                     <div>
                         <span class="font-bold text-2xl tracking-tight text-slate-900 block leading-none">PATW</span>
-                        <span class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Global Charity</span>
+                        <span class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Help Humanity</span>
                     </div>
                 </div>
-
-                <!-- Desktop Menu -->
-                <div class="flex items-center space-x-8">
-                    <a href="#mission" class="text-sm font-semibold text-slate-600 hover:text-emerald-600 transition duration-200">Our Mission</a>
-                    <a href="#track" class="text-sm font-semibold text-slate-600 hover:text-emerald-600 transition duration-200">Track Impact</a>
-                    <a href="#donate" class="px-6 py-2.5 bg-slate-900 text-white text-sm font-semibold rounded-full hover:bg-emerald-600 transition-all duration-300 shadow-lg hover:shadow-emerald-600/25 transform hover:-translate-y-0.5">
-                        Donate Now
-                    </a>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#mission" class="text-sm font-semibold text-slate-600 hover:text-emerald-600">Our Mission</a>
+                    <a href="#track" class="text-sm font-semibold text-slate-600 hover:text-emerald-600">Track Impact</a>
+                    <a href="#donate" class="px-6 py-2.5 bg-slate-900 text-white text-sm font-semibold rounded-full hover:bg-emerald-600 transition-all">Donate</a>
                 </div>
             </div>
         </div>
     </nav>
 
-    <!-- Mobile Top Header -->
-    <nav class="md:hidden fixed w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-100 shadow-sm top-0">
-        <div class="px-4 h-16 flex items-center justify-between">
-            <div class="flex items-center gap-2">
-                <div class="bg-gradient-to-br from-emerald-500 to-blue-600 text-white p-2 rounded-lg">
-                    <i class="fa-solid fa-earth-americas"></i>
-                </div>
-                <span class="font-bold text-lg text-slate-900">PATW</span>
-            </div>
-            <div class="text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-100 px-3 py-1 rounded-full">
-                Live Impact
-            </div>
-        </div>
-    </nav>
-
-    <!-- Hero Section (Professional Split Layout) -->
-    <section class="relative pt-24 pb-16 lg:pt-32 lg:pb-24 overflow-hidden">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
+    <!-- Hero Section -->
+    <section class="relative pt-28 pb-16 lg:pt-36 lg:pb-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
                 
-                <!-- Text Content -->
-                <div class="text-center lg:text-left slide-up">
-                    <div class="inline-flex items-center gap-2 py-1 px-3 rounded-full bg-blue-50 text-blue-700 text-xs font-bold uppercase tracking-wide mb-6 border border-blue-100">
-                        <span class="w-2 h-2 rounded-full bg-blue-600 animate-pulse"></span>
-                        Connecting 50+ Nations
+                <div class="text-center lg:text-left">
+                    <div class="inline-flex items-center gap-2 py-1 px-3 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold uppercase mb-6 border border-emerald-100">
+                        <span class="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
+                        Real-time Global Redistribution
                     </div>
-                    <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-6 text-slate-900 leading-tight">
-                        Poverty Around <br />
-                        <span class="gradient-text">The World</span>
+                    <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-6 text-slate-900">
+                        Your Kindness <br />
+                        <span class="gradient-text">Changes Worlds</span>
                     </h1>
-                    <p class="mt-4 text-lg text-slate-600 max-w-2xl mx-auto lg:mx-0 mb-10 leading-relaxed">
-                        Compassion shouldn't have borders. With <b>PATW</b>, your single donation is intelligently distributed to regions facing the most critical crises right now.
+                    <p class="text-lg text-slate-600 mb-10 leading-relaxed max-w-xl">
+                        PATW ensures your donation reaches the 50 most vulnerable countries instantly. No middleman, just pure impact verified by data.
                     </p>
-                    <div class="flex flex-col sm:flex-row justify-center lg:justify-start gap-4">
-                        <a href="#donate" class="px-8 py-4 bg-emerald-600 text-white rounded-xl font-bold text-lg shadow-xl shadow-emerald-600/30 hover:bg-emerald-700 hover:scale-[1.02] active:scale-95 transition-all duration-300 flex items-center justify-center gap-2">
-                            <span>Start Donating</span>
-                            <i class="fa-solid fa-arrow-right text-sm"></i>
-                        </a>
-                        <a href="#track" class="px-8 py-4 bg-white text-slate-700 border border-slate-200 rounded-xl font-bold text-lg hover:bg-slate-50 hover:border-slate-300 transition-all duration-300 flex items-center justify-center gap-2 shadow-sm">
-                            <i class="fa-solid fa-magnifying-glass"></i> Track Donation
-                        </a>
-                    </div>
                     
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                        <a href="#donate" class="px-8 py-4 bg-emerald-600 text-white rounded-xl font-bold text-lg shadow-xl shadow-emerald-600/30 hover:bg-emerald-700 transition-all">Start Donating</a>
+                        <button onclick="showDonorList()" class="px-8 py-4 bg-white text-slate-700 border border-slate-200 rounded-xl font-bold text-lg hover:bg-slate-50 transition-all flex items-center justify-center gap-2">
+                             <i class="fa-solid fa-users"></i> See Donors
+                        </button>
+                    </div>
+
+                    <!-- Clickable Global Donors -->
                     <div class="mt-10 flex items-center justify-center lg:justify-start gap-4 text-sm text-slate-500 font-medium">
-                        <div class="flex -space-x-3">
-                            <img class="w-10 h-10 rounded-full border-2 border-white" src="https://randomuser.me/api/portraits/women/44.jpg" alt="Donor">
-                            <img class="w-10 h-10 rounded-full border-2 border-white" src="https://randomuser.me/api/portraits/men/32.jpg" alt="Donor">
-                            <img class="w-10 h-10 rounded-full border-2 border-white" src="https://randomuser.me/api/portraits/women/68.jpg" alt="Donor">
-                            <div class="w-10 h-10 rounded-full border-2 border-white bg-slate-100 flex items-center justify-center text-xs text-slate-600">+2k</div>
+                        <div class="flex -space-x-3 cursor-pointer" onclick="showDonorList()">
+                            <img class="w-10 h-10 rounded-full border-2 border-white" src="https://i.pravatar.cc/150?u=1">
+                            <img class="w-10 h-10 rounded-full border-2 border-white" src="https://i.pravatar.cc/150?u=2">
+                            <img class="w-10 h-10 rounded-full border-2 border-white" src="https://i.pravatar.cc/150?u=3">
+                            <div class="w-10 h-10 rounded-full border-2 border-white bg-emerald-500 flex items-center justify-center text-[10px] text-white font-bold">+2k</div>
                         </div>
-                        <p>Join 2,000+ global donors today.</p>
+                        <p class="cursor-pointer hover:text-emerald-600 transition" onclick="showDonorList()">Join <span class="font-bold text-slate-800">2,000+ global donors</span> already contributing.</p>
                     </div>
                 </div>
 
-                <!-- Hero Image -->
-                <div class="relative lg:h-[600px] flex items-center justify-center slide-up" style="animation-delay: 0.2s;">
-                    <!-- Abstract Background blobs -->
-                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-gradient-to-r from-blue-200/50 to-emerald-200/50 rounded-full blur-3xl -z-10"></div>
-                    
-                    <!-- Main Image with Overlay Card -->
-                    <div class="relative w-full max-w-lg mx-auto transform rotate-1 hover:rotate-0 transition-transform duration-700">
-                        <img 
-                            src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" 
-                            alt="Children smiling together" 
-                            class="rounded-3xl shadow-2xl w-full h-auto object-cover border-4 border-white"
-                        >
-                        
-                        <!-- Floating Impact Card -->
-                        <div class="absolute -bottom-6 -left-6 bg-white p-4 rounded-2xl shadow-xl border border-slate-100 max-w-xs animate-bounce" style="animation-duration: 3s;">
-                            <div class="flex items-center gap-3">
-                                <div class="bg-green-100 p-2 rounded-full text-green-600">
-                                    <i class="fa-solid fa-shield-heart text-xl"></i>
-                                </div>
-                                <div>
-                                    <p class="text-xs text-slate-500 font-semibold uppercase">Total Impact</p>
-                                    <p class="text-lg font-bold text-slate-800">$1.2M+ Distributed</p>
-                                </div>
-                            </div>
+                <!-- Professional Slideshow (10 Images) -->
+                <div class="relative">
+                    <div class="slideshow-container" id="heroSlideshow">
+                        <!-- Images will be injected by JS -->
+                    </div>
+                    <div class="absolute -bottom-6 -right-6 bg-white p-4 rounded-2xl shadow-xl border border-slate-100 animate-bounce">
+                        <div class="flex items-center gap-3">
+                            <div class="bg-blue-100 p-2 rounded-full text-blue-600"><i class="fa-solid fa-heart-pulse"></i></div>
+                            <p class="text-xs font-bold text-slate-800">LIVE: Aid arriving in Sudan</p>
                         </div>
                     </div>
                 </div>
@@ -232,568 +140,248 @@
         </div>
     </section>
 
-    <!-- How It Works & Rotating Earth -->
-    <section id="mission" class="py-20 bg-white relative">
-        <div class="max-w-7xl mx-auto px-4">
+    <!-- Tracking Section -->
+    <section id="track" class="py-20 bg-white">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <h2 class="text-3xl font-bold text-slate-900 mb-2">Track Your Impact</h2>
+            <p class="text-slate-500 mb-10">Paste your ID below to see exactly where your funds are working.</p>
             
-            <div class="text-center mb-16">
-                <!-- Rotating Earth Animation -->
-                <div class="earth-container" aria-hidden="true">
-                    <div class="earth-overlay"></div>
-                    <div class="flag-belt">
-                        <!-- Flags for animation -->
-                        <span class="flag-icon">🇺🇸</span><span class="flag-icon">🇮🇳</span><span class="flag-icon">🇬🇧</span><span class="flag-icon">🇨🇦</span><span class="flag-icon">🇦🇺</span><span class="flag-icon">🇯🇵</span><span class="flag-icon">🇧🇷</span><span class="flag-icon">🇿🇦</span><span class="flag-icon">🇳🇬</span><span class="flag-icon">🇫🇷</span><span class="flag-icon">🇩🇪</span><span class="flag-icon">🇮🇹</span><span class="flag-icon">🇪🇸</span><span class="flag-icon">🇨🇳</span><span class="flag-icon">🇷🇺</span><span class="flag-icon">🇲🇽</span><span class="flag-icon">🇰🇷</span>
-                        <span class="flag-icon">🇺🇸</span><span class="flag-icon">🇮🇳</span><span class="flag-icon">🇬🇧</span><span class="flag-icon">🇨🇦</span><span class="flag-icon">🇦🇺</span><span class="flag-icon">🇯🇵</span><span class="flag-icon">🇧🇷</span><span class="flag-icon">🇿🇦</span><span class="flag-icon">🇳🇬</span><span class="flag-icon">🇫🇷</span><span class="flag-icon">🇩🇪</span><span class="flag-icon">🇮🇹</span><span class="flag-icon">🇪🇸</span><span class="flag-icon">🇨🇳</span><span class="flag-icon">🇷🇺</span><span class="flag-icon">🇲🇽</span><span class="flag-icon">🇰🇷</span>
-                    </div>
-                </div>
-                <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Transparent Global Aid</h2>
-                <p class="text-slate-500 max-w-2xl mx-auto text-lg">We use smart algorithms to route your funds where they matter most, instantly.</p>
+            <div class="flex flex-col md:flex-row gap-3 max-w-lg mx-auto mb-12">
+                <input type="text" id="trackingInput" placeholder="Enter ID (e.g., PATW-1234)" class="flex-1 border border-slate-300 rounded-xl px-6 py-4 focus:border-emerald-500 outline-none text-lg">
+                <button onclick="trackDonation()" class="bg-emerald-600 text-white px-8 py-4 rounded-xl font-bold hover:bg-emerald-700 transition shadow-lg">Track</button>
             </div>
 
-            <div class="grid md:grid-cols-3 gap-8">
-                <!-- Step 1 -->
-                <div class="group p-8 rounded-3xl bg-slate-50 border border-slate-100 hover:bg-white hover:shadow-xl hover:shadow-slate-200/50 transition-all duration-300 cursor-default">
-                    <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">
-                        <i class="fa-solid fa-hand-holding-dollar"></i>
+            <!-- Result Box -->
+            <div id="trackingResult" class="hidden text-left bg-slate-50 p-8 rounded-3xl border border-slate-200 shadow-sm animate-fade-in">
+                <div class="flex justify-between items-center border-b border-slate-200 pb-6 mb-6">
+                    <div>
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Transaction ID</span>
+                        <h3 id="resultId" class="text-xl font-mono font-bold text-slate-800">PATW-XXXX</h3>
                     </div>
-                    <h3 class="text-xl font-bold mb-3 text-slate-800">1. You Donate</h3>
-                    <p class="text-slate-500 leading-relaxed">Choose an amount in your local currency. Your contribution enters our secure global liquidity pool.</p>
+                    <div class="text-right">
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Amount</span>
+                        <h3 id="resultAmount" class="text-xl font-bold text-emerald-600">$0.00</h3>
+                    </div>
                 </div>
-                <!-- Step 2 -->
-                <div class="group p-8 rounded-3xl bg-slate-50 border border-slate-100 hover:bg-white hover:shadow-xl hover:shadow-slate-200/50 transition-all duration-300 cursor-default">
-                    <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">
-                        <i class="fa-solid fa-network-wired"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3 text-slate-800">2. Smart Distribution</h3>
-                    <p class="text-slate-500 leading-relaxed">Our system automatically splits your donation across 3 critical zones based on real-time urgency data.</p>
-                </div>
-                <!-- Step 3 -->
-                <div class="group p-8 rounded-3xl bg-slate-50 border border-slate-100 hover:bg-white hover:shadow-xl hover:shadow-slate-200/50 transition-all duration-300 cursor-default">
-                    <div class="w-16 h-16 bg-purple-100 text-purple-600 rounded-2xl flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">
-                        <i class="fa-solid fa-chart-line"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3 text-slate-800">3. Real-time Tracking</h3>
-                    <p class="text-slate-500 leading-relaxed">Receive a unique Tracking ID. See exactly which countries received your aid and the verified impact.</p>
+                <div id="distributionList" class="space-y-6">
+                    <!-- Results here -->
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Donation Section -->
-    <section id="donate" class="py-20 bg-slate-900 text-white relative overflow-hidden">
-        <!-- Background Map Effect -->
-        <div class="absolute inset-0 opacity-10" style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/e/ec/World_map_blank_without_borders.svg'); background-repeat: no-repeat; background-position: center; background-size: cover;"></div>
-        
-        <div class="max-w-4xl mx-auto px-4 relative z-10">
-            <div class="glass-card bg-slate-800/60 p-8 md:p-12 rounded-[2.5rem] border border-slate-700 shadow-2xl backdrop-blur-xl">
-                <div class="text-center mb-10">
-                    <span class="text-emerald-400 font-bold tracking-widest uppercase text-xs border border-emerald-400/30 px-3 py-1 rounded-full">Secure Gateway</span>
-                    <h2 class="text-3xl md:text-5xl font-bold mt-4 mb-2">Donate to the World</h2>
-                    <p class="text-slate-400">Your contribution is tax-deductible.</p>
+    <section id="donate" class="py-20 bg-slate-900 text-white">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <h2 class="text-4xl font-bold mb-6">Make a Difference Today</h2>
+            <div class="bg-slate-800 p-8 rounded-3xl border border-slate-700">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                    <button onclick="setAmount(10)" class="amount-btn p-4 rounded-xl border border-slate-600 hover:bg-emerald-600 hover:border-emerald-500 font-bold">$10</button>
+                    <button onclick="setAmount(50)" class="amount-btn p-4 rounded-xl border border-slate-600 hover:bg-emerald-600 hover:border-emerald-500 font-bold">$50</button>
+                    <button onclick="setAmount(100)" class="amount-btn p-4 rounded-xl border border-slate-600 hover:bg-emerald-600 hover:border-emerald-500 font-bold">$100</button>
+                    <button onclick="setAmount(500)" class="amount-btn p-4 rounded-xl border border-slate-600 hover:bg-emerald-600 hover:border-emerald-500 font-bold">$500</button>
                 </div>
-
-                <div class="space-y-8">
-                    <!-- Currency & Amount Selection -->
-                    <div class="bg-slate-900/50 p-6 rounded-2xl border border-slate-700/50">
-                        <div class="flex justify-between items-end mb-4">
-                            <label class="block text-slate-300 text-sm font-bold uppercase tracking-wide">Select Amount</label>
-                            
-                            <!-- Currency Selector -->
-                            <select id="currencySelector" onchange="updateCurrencySymbol()" class="bg-slate-800 border border-slate-600 text-white text-sm font-semibold rounded-lg focus:ring-emerald-500 focus:border-emerald-500 block p-2 cursor-pointer hover:bg-slate-700 transition">
-                                <option value="USD" selected>USD ($)</option>
-                                <option value="INR">INR (₹)</option>
-                                <option value="EUR">EUR (€)</option>
-                                <option value="GBP">GBP (£)</option>
-                                <option value="AUD">AUD (A$)</option>
-                            </select>
-                        </div>
-                        
-                        <div class="grid grid-cols-4 gap-3 md:gap-4 mb-4">
-                            <button onclick="selectAmount(10)" class="amount-btn py-4 rounded-xl border border-slate-600 hover:bg-emerald-600 hover:border-emerald-500 transition-all duration-200 font-bold text-lg focus:ring-4 focus:ring-emerald-500/30">10</button>
-                            <button onclick="selectAmount(50)" class="amount-btn py-4 rounded-xl border border-slate-600 hover:bg-emerald-600 hover:border-emerald-500 transition-all duration-200 font-bold text-lg focus:ring-4 focus:ring-emerald-500/30">50</button>
-                            <button onclick="selectAmount(100)" class="amount-btn py-4 rounded-xl border border-slate-600 hover:bg-emerald-600 hover:border-emerald-500 transition-all duration-200 font-bold text-lg focus:ring-4 focus:ring-emerald-500/30">100</button>
-                            <button onclick="selectAmount(500)" class="amount-btn py-4 rounded-xl border border-slate-600 hover:bg-emerald-600 hover:border-emerald-500 transition-all duration-200 font-bold text-lg focus:ring-4 focus:ring-emerald-500/30">500</button>
-                        </div>
-                        <div class="relative group">
-                            <span id="customCurrencySymbol" class="absolute left-5 top-4 text-slate-400 font-semibold group-focus-within:text-emerald-400 transition-colors">$</span>
-                            <input type="number" id="customAmount" placeholder="Or enter custom amount" class="w-full bg-slate-800 border border-slate-600 rounded-xl py-4 pl-10 pr-4 text-white placeholder-slate-500 font-semibold focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all">
-                        </div>
-                    </div>
-
-                    <!-- Donor Details -->
-                    <div class="grid md:grid-cols-2 gap-6">
-                        <div>
-                            <label class="block text-slate-300 text-xs font-bold uppercase tracking-wide mb-2">Full Name</label>
-                            <input type="text" id="donorName" class="w-full bg-slate-900/50 border border-slate-600 rounded-xl py-3 px-4 focus:outline-none focus:border-emerald-500 focus:bg-slate-800 transition text-white" placeholder="Jane Doe">
-                        </div>
-                        <div>
-                            <label class="block text-slate-300 text-xs font-bold uppercase tracking-wide mb-2">Email Address</label>
-                            <input type="email" id="donorEmail" class="w-full bg-slate-900/50 border border-slate-600 rounded-xl py-3 px-4 focus:outline-none focus:border-emerald-500 focus:bg-slate-800 transition text-white" placeholder="jane@example.com">
-                        </div>
-                    </div>
-
-                    <!-- Payment Button -->
-                    <button onclick="processDonation()" class="w-full bg-gradient-to-r from-emerald-500 to-emerald-700 text-white font-bold py-5 rounded-xl shadow-xl shadow-emerald-900/50 hover:shadow-emerald-600/40 hover:scale-[1.01] active:scale-[0.98] transition-all duration-300 text-xl flex items-center justify-center gap-3">
-                        <i class="fa-solid fa-heart"></i>
-                        <span>Complete Donation</span>
-                    </button>
-                    <div class="flex items-center justify-center gap-2 text-slate-500 text-xs">
-                        <i class="fa-solid fa-lock text-emerald-500"></i>
-                        <span>Secure 256-bit SSL Encrypted payment powered by Stripe.</span>
-                    </div>
-                </div>
+                <input type="number" id="customAmt" placeholder="Or enter amount" class="w-full bg-slate-900 border border-slate-600 rounded-xl p-4 mb-6 text-white text-center text-xl font-bold outline-none focus:border-emerald-500">
+                <button onclick="processDonation()" class="w-full bg-emerald-600 py-5 rounded-xl text-xl font-bold hover:bg-emerald-700 transition shadow-xl">Complete Donation</button>
             </div>
         </div>
     </section>
 
-    <!-- Tracking Section -->
-    <section id="track" class="py-20 bg-slate-50 border-t border-slate-200">
-        <div class="max-w-3xl mx-auto px-4 text-center">
-            <h2 class="text-3xl font-bold text-slate-900 mb-4">Track Your Impact</h2>
-            <p class="text-slate-500 mb-10 text-lg">Transparency is our core value. Enter your Transaction ID to trace your funds.</p>
-            
-            <div class="flex flex-col md:flex-row gap-3 max-w-lg mx-auto mb-12 shadow-sm">
-                <input type="text" id="trackingInput" placeholder="Enter Tracking ID (e.g., PATW-1234)" class="flex-1 border border-gray-300 rounded-xl px-6 py-4 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition w-full text-lg">
-                <button onclick="trackDonation()" class="bg-blue-600 text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-blue-700 transition shadow-lg hover:shadow-blue-600/30 w-full md:w-auto">
-                    Track
-                </button>
+    <!-- Global Donor List Modal -->
+    <div id="donorModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-slate-900/90 backdrop-blur-md p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full max-h-[80vh] overflow-hidden flex flex-col">
+            <div class="p-6 border-b border-slate-100 flex justify-between items-center">
+                <h3 class="text-xl font-bold">Recent Global Donors</h3>
+                <button onclick="hideDonorList()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark fa-xl"></i></button>
             </div>
-
-            <!-- Tracking Result Container (Hidden by default) -->
-            <div id="trackingResult" class="hidden text-left bg-white p-6 md:p-8 rounded-2xl shadow-xl border border-gray-100 animate-fade-in relative overflow-hidden">
-                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-emerald-500"></div>
-                <div class="flex justify-between items-center mb-8 border-b border-gray-100 pb-6">
-                    <div>
-                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wide">Transaction ID</p>
-                        <h3 id="resultId" class="text-2xl font-bold text-slate-800 font-mono mt-1">PATW-XXXX</h3>
-                    </div>
-                    <div class="text-right">
-                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wide">Total Amount</p>
-                        <h3 id="resultAmount" class="text-2xl font-bold text-emerald-600 mt-1">$0.00</h3>
-                    </div>
-                </div>
-
-                <h4 class="font-bold text-slate-800 mb-6 flex items-center gap-2">
-                    <i class="fa-solid fa-map-location-dot text-blue-500"></i> Distribution Map:
-                </h4>
-                <div id="distributionList" class="space-y-6">
-                    <!-- Dynamic Content -->
-                </div>
-
-                <div class="mt-8 bg-blue-50 p-5 rounded-xl flex items-start gap-4 border border-blue-100">
-                    <div class="bg-blue-100 p-2 rounded-full text-blue-600 shrink-0">
-                        <i class="fa-solid fa-certificate"></i>
-                    </div>
-                    <div>
-                        <p class="font-bold text-blue-900 text-sm">Blockchain Verified</p>
-                        <p class="text-blue-700/80 text-xs mt-1 leading-relaxed">This distribution record is permanently stored on our ledger. PATW guarantees that 100% of these allocated funds have reached local partners.</p>
-                    </div>
-                </div>
+            <div id="donorListItems" class="p-6 overflow-y-auto space-y-4">
+                <!-- Donor items -->
+            </div>
+            <div class="p-6 bg-slate-50 text-center">
+                <p class="text-sm text-slate-500">Updates every few minutes</p>
             </div>
         </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="bg-slate-900 text-slate-400 py-16 border-t border-slate-800 mb-16 md:mb-0">
-        <div class="max-w-7xl mx-auto px-4 grid md:grid-cols-4 gap-12 text-center md:text-left">
-            <div class="col-span-1 md:col-span-2">
-                <div class="flex items-center justify-center md:justify-start gap-3 mb-6 text-white">
-                    <div class="bg-emerald-600 p-1.5 rounded-lg">
-                         <i class="fa-solid fa-earth-americas fa-lg"></i>
-                    </div>
-                    <span class="font-bold text-2xl tracking-tight">PATW</span>
-                </div>
-                <p class="text-slate-500 text-sm max-w-sm mx-auto md:mx-0 leading-relaxed">
-                    We are a non-profit organization dedicated to eradicating poverty through transparent, data-driven global redistribution of wealth.
-                </p>
-            </div>
-            <div>
-                <h4 class="text-white font-bold mb-6">Quick Links</h4>
-                <ul class="space-y-3 text-sm font-medium">
-                    <li><a href="#" class="hover:text-emerald-400 transition">Our Story</a></li>
-                    <li><a href="#mission" class="hover:text-emerald-400 transition">How it Works</a></li>
-                    <li><a href="#track" class="hover:text-emerald-400 transition">Track Donation</a></li>
-                </ul>
-            </div>
-            <div>
-                <h4 class="text-white font-bold mb-6">Socials</h4>
-                <div class="flex justify-center md:justify-start space-x-4">
-                    <a href="#" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-emerald-600 hover:text-white transition-all duration-300"><i class="fa-brands fa-twitter"></i></a>
-                    <a href="#" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-emerald-600 hover:text-white transition-all duration-300"><i class="fa-brands fa-instagram"></i></a>
-                    <a href="#" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-emerald-600 hover:text-white transition-all duration-300"><i class="fa-brands fa-linkedin-in"></i></a>
-                </div>
-            </div>
-        </div>
-        <div class="max-w-7xl mx-auto px-4 mt-16 pt-8 border-t border-slate-800 text-center text-xs text-slate-600 font-medium">
-            &copy; 2024 PATW (Poverty Around The World). All rights reserved.
-        </div>
-    </footer>
-
-    <!-- MOBILE APP BOTTOM NAVIGATION -->
-    <div class="md:hidden fixed bottom-0 left-0 w-full bg-white/95 backdrop-blur-lg border-t border-gray-200 flex justify-around py-3 z-50 pb-safe">
-        <a href="#home" class="flex flex-col items-center text-slate-400 hover:text-emerald-600 focus:text-emerald-600 transition">
-            <i class="fa-solid fa-house text-xl mb-1"></i>
-            <span class="text-[10px] font-semibold">Home</span>
-        </a>
-        <a href="#mission" class="flex flex-col items-center text-slate-400 hover:text-emerald-600 focus:text-emerald-600 transition">
-            <i class="fa-solid fa-layer-group text-xl mb-1"></i>
-            <span class="text-[10px] font-semibold">Mission</span>
-        </a>
-        <a href="#donate" class="flex flex-col items-center text-emerald-600 relative group">
-            <div class="bg-emerald-600 text-white w-14 h-14 rounded-full flex items-center justify-center -mt-8 shadow-lg shadow-emerald-600/30 border-[4px] border-white group-active:scale-95 transition-transform">
-                <i class="fa-solid fa-hand-holding-dollar text-xl"></i>
-            </div>
-            <span class="text-[10px] font-bold mt-1">Donate</span>
-        </a>
-        <a href="#track" class="flex flex-col items-center text-slate-400 hover:text-emerald-600 focus:text-emerald-600 transition">
-            <i class="fa-solid fa-magnifying-glass text-xl mb-1"></i>
-            <span class="text-[10px] font-semibold">Track</span>
-        </a>
     </div>
 
-    <!-- Live Donation Ticker (Fixed Bottom Right) -->
+    <!-- Live Ticker -->
     <div id="liveTicker" class="ticker-card bg-white p-4 rounded-xl shadow-2xl border border-slate-100 flex items-center gap-4 max-w-sm">
         <div id="tickerFlag" class="text-3xl">🇮🇳</div>
         <div>
-            <p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-0.5">Live Donation</p>
-            <p class="text-sm text-slate-800 font-medium">
-                <span class="font-bold text-emerald-600" id="tickerAmount">$25</span> 
-                to <span id="tickerCountry" class="font-bold">India</span>
-            </p>
-            <p class="text-xs text-slate-500 truncate w-40" id="tickerCause">Rural Healthcare</p>
-        </div>
-        <button onclick="hideTicker()" class="ml-auto text-slate-300 hover:text-slate-500">
-            <i class="fa-solid fa-xmark"></i>
-        </button>
-    </div>
-
-    <!-- Success Modal -->
-    <div id="successModal" class="fixed inset-0 z-[60] flex items-center justify-center bg-slate-900/90 hidden opacity-0 transition-opacity duration-300 px-4 backdrop-blur-sm">
-        <div class="bg-white rounded-3xl p-8 max-w-sm w-full text-center transform scale-95 transition-transform duration-300 shadow-2xl relative overflow-hidden">
-            <!-- Confetti Background (CSS only for simplicity) -->
-            <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-500 via-emerald-500 to-purple-500"></div>
-            
-            <div class="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6 text-emerald-600 text-4xl shadow-inner">
-                <i class="fa-solid fa-check"></i>
-            </div>
-            <h3 class="text-2xl font-bold text-slate-900 mb-2">Thank You!</h3>
-            <p class="text-slate-500 mb-8 leading-relaxed">Your donation has been received and is being routed to those in need.</p>
-            
-            <div class="bg-slate-50 p-5 rounded-xl mb-8 border border-slate-200 border-dashed">
-                <p class="text-xs text-slate-400 uppercase font-bold tracking-widest mb-2">Your Tracking ID</p>
-                <p id="modalTrackingId" class="text-2xl font-mono font-bold text-slate-800 select-all cursor-pointer hover:text-blue-600 transition" onclick="copyToClipboard(this)">PATW-XXXX</p>
-                <div class="flex justify-center items-center gap-1 mt-2 text-emerald-600 text-[10px] font-medium">
-                    <i class="fa-regular fa-copy"></i> Click ID to copy
-                </div>
-            </div>
-
-            <button onclick="closeModal()" class="w-full bg-slate-900 text-white py-4 rounded-xl font-bold hover:bg-slate-800 transition shadow-lg">
-                Close
-            </button>
+            <p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Live Donation</p>
+            <p class="text-sm font-bold text-slate-800"><span class="text-emerald-600" id="tickerAmt">$50</span> to <span id="tickerCountry">India</span></p>
         </div>
     </div>
 
-    <!-- JavaScript Logic -->
     <script>
-        // Data: 50 Countries
-        const countriesData = [
-            // Original & High Priority
-            { name: "India", flag: "🇮🇳", cause: "Rural Healthcare", color: "bg-orange-500" },
-            { name: "South Sudan", flag: "🇸🇸", cause: "Emergency Food Aid", color: "bg-red-600" },
-            { name: "Yemen", flag: "🇾🇪", cause: "Medical Supplies", color: "bg-red-500" },
-            { name: "Afghanistan", flag: "🇦🇫", cause: "Child Education", color: "bg-green-600" },
-            { name: "Syria", flag: "🇸🇾", cause: "Winter Shelter", color: "bg-stone-600" },
-            { name: "Haiti", flag: "🇭🇹", cause: "Earthquake Relief", color: "bg-blue-600" },
-            { name: "Somalia", flag: "🇸🇴", cause: "Drought Relief", color: "bg-yellow-500" },
-            { name: "Congo (DRC)", flag: "🇨🇩", cause: "Disease Prevention", color: "bg-blue-700" },
-            { name: "Ukraine", flag: "🇺🇦", cause: "Housing & Medical", color: "bg-blue-400" },
-            { name: "Palestine", flag: "🇵🇸", cause: "Emergency Aid", color: "bg-green-600" },
-            // Africa
-            { name: "Ethiopia", flag: "🇪🇹", cause: "Food Security", color: "bg-yellow-600" },
-            { name: "Nigeria", flag: "🇳🇬", cause: "Malaria Prevention", color: "bg-green-700" },
-            { name: "Madagascar", flag: "🇲🇬", cause: "Clean Water", color: "bg-red-400" },
-            { name: "Sudan", flag: "🇸🇩", cause: "Conflict Displacement", color: "bg-green-800" },
-            { name: "Mali", flag: "🇲🇱", cause: "Child Nutrition", color: "bg-yellow-500" },
-            { name: "Chad", flag: "🇹🇩", cause: "Water Access", color: "bg-blue-500" },
-            { name: "Mozambique", flag: "🇲🇿", cause: "Cyclone Recovery", color: "bg-teal-500" },
-            { name: "Niger", flag: "🇳🇪", cause: "Agricultural Aid", color: "bg-orange-400" },
-            { name: "Zimbabwe", flag: "🇿🇼", cause: "Food Distribution", color: "bg-yellow-700" },
-            { name: "Burkina Faso", flag: "🇧🇫", cause: "Clean Water", color: "bg-red-600" },
-            { name: "Kenya", flag: "🇰🇪", cause: "Drought Resilience", color: "bg-green-500" },
-            { name: "Uganda", flag: "🇺🇬", cause: "Refugee Education", color: "bg-yellow-600" },
-            { name: "Malawi", flag: "🇲🇼", cause: "School Supplies", color: "bg-red-500" },
-            { name: "Sierra Leone", flag: "🇸🇱", cause: "Maternal Health", color: "bg-green-400" },
-            { name: "Liberia", flag: "🇱🇷", cause: "School Infrastructure", color: "bg-red-600" },
-            { name: "Central African Republic", flag: "🇨🇫", cause: "Protection Services", color: "bg-yellow-500" },
-            { name: "Burundi", flag: "🇧🇮", cause: "Food Aid", color: "bg-green-600" },
-            { name: "Eritrea", flag: "🇪🇷", cause: "Water Access", color: "bg-blue-400" },
-            { name: "Libya", flag: "🇱🇾", cause: "Emergency Health", color: "bg-green-600" },
-            { name: "Angola", flag: "🇦🇴", cause: "Health Services", color: "bg-red-700" },
-            { name: "Zambia", flag: "🇿🇲", cause: "Education Access", color: "bg-green-600" },
-            { name: "Tanzania", flag: "🇹🇿", cause: "Clean Water", color: "bg-blue-500" },
-            { name: "Senegal", flag: "🇸🇳", cause: "Food Security", color: "bg-yellow-500" },
-            { name: "Rwanda", flag: "🇷🇼", cause: "Community Development", color: "bg-blue-500" },
-            // Asia & Middle East
-            { name: "Bangladesh", flag: "🇧🇩", cause: "Flood Rehabilitation", color: "bg-teal-600" },
-            { name: "Myanmar", flag: "🇲🇲", cause: "Refugee Support", color: "bg-yellow-400" },
-            { name: "Pakistan", flag: "🇵🇰", cause: "Flood Relief", color: "bg-emerald-600" },
-            { name: "Lebanon", flag: "🇱🇧", cause: "Economic Aid", color: "bg-red-500" },
-            { name: "Nepal", flag: "🇳🇵", cause: "Disaster Recovery", color: "bg-blue-600" },
-            { name: "Sri Lanka", flag: "🇱🇰", cause: "Crisis Support", color: "bg-yellow-500" },
-            { name: "Cambodia", flag: "🇰🇭", cause: "Clean Water", color: "bg-blue-500" },
-            { name: "Philippines", flag: "🇵🇭", cause: "Typhoon Relief", color: "bg-blue-400" },
-            { name: "Indonesia", flag: "🇮🇩", cause: "Disaster Prep", color: "bg-red-500" },
-            { name: "Iraq", flag: "🇮🇶", cause: "Rebuilding Homes", color: "bg-stone-500" },
-            { name: "North Korea", flag: "🇰🇵", cause: "Food Assistance", color: "bg-red-700" },
-            { name: "Laos", flag: "🇱🇦", cause: "Safety & Demining", color: "bg-blue-500" },
-            { name: "Timor-Leste", flag: "🇹🇱", cause: "Child Nutrition", color: "bg-red-500" },
-            // Americas & Oceania
-            { name: "Venezuela", flag: "🇻🇪", cause: "Basic Medicine", color: "bg-red-700" },
-            { name: "Papua New Guinea", flag: "🇵🇬", cause: "Rural Health", color: "bg-red-800" },
-            { name: "Guatemala", flag: "🇬🇹", cause: "Child Nutrition", color: "bg-cyan-500" },
-            { name: "Honduras", flag: "🇭🇳", cause: "Housing Aid", color: "bg-blue-400" },
-            { name: "El Salvador", flag: "🇸🇻", cause: "Youth Education", color: "bg-blue-500" },
-            { name: "Brazil", flag: "🇧🇷", cause: "Favelas Aid", color: "bg-green-500" },
-            { name: "Peru", flag: "🇵🇪", cause: "Cold Wave Relief", color: "bg-red-500" },
-            { name: "Bolivia", flag: "🇧🇴", cause: "Indigenous Support", color: "bg-yellow-500" },
-            { name: "Nicaragua", flag: "🇳🇮", cause: "Clean Water", color: "bg-blue-600" }
+        // 10 Images for Slideshow
+        const slideshowImages = [
+            "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=1000",
+            "https://images.unsplash.com/photo-1532629345422-7515f3d16bb8?q=80&w=1000",
+            "https://images.unsplash.com/photo-1459183885447-df8044c74b44?q=80&w=1000",
+            "https://images.unsplash.com/photo-1509099836639-18ba1795216d?q=80&w=1000",
+            "https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?q=80&w=1000",
+            "https://images.unsplash.com/photo-1542810634-71277d95dcbb?q=80&w=1000",
+            "https://images.unsplash.com/photo-1593113598332-cd288d649433?q=80&w=1000",
+            "https://images.unsplash.com/photo-1518391846015-55a9cc003b25?q=80&w=1000",
+            "https://images.unsplash.com/photo-1444653614773-995cb1ef9efa?q=80&w=1000",
+            "https://images.unsplash.com/photo-1524069290683-0457abfe42c3?q=80&w=1000"
         ];
 
-        let selectedDonationAmount = 0;
-        let selectedCurrency = "USD";
-        let selectedSymbol = "$";
+        // 50 Countries List
+        const countries = [
+            { name: "Afghanistan", flag: "🇦🇫", cause: "Food Aid" },
+            { name: "Yemen", flag: "🇾🇪", cause: "Medical Help" },
+            { name: "South Sudan", flag: "🇸🇸", cause: "Clean Water" },
+            { name: "Syria", flag: "🇸🇾", cause: "Shelter" },
+            { name: "Haiti", flag: "🇭🇹", cause: "Education" },
+            { name: "India", flag: "🇮🇳", cause: "Healthcare" },
+            { name: "Ukraine", flag: "🇺🇦", cause: "War Relief" },
+            { name: "Ethiopia", flag: "🇪🇹", cause: "Famine Relief" },
+            { name: "Bangladesh", flag: "🇧🇩", cause: "Flood Aid" },
+            { name: "Nigeria", flag: "🇳🇬", cause: "Vaccination" },
+            { name: "Pakistan", flag: "🇵🇰", cause: "Disaster Relief" },
+            { name: "Sudan", flag: "🇸🇩", cause: "Protection" },
+            { name: "Mali", flag: "🇲🇱", cause: "Agriculture" },
+            { name: "DR Congo", flag: "🇨🇩", cause: "Sanitation" },
+            { name: "Somalia", flag: "🇸🇴", cause: "Livestock" },
+            { name: "Myanmar", flag: "🇲🇲", cause: "Child Safety" },
+            { name: "Chad", flag: "🇹🇩", cause: "Emergency Water" },
+            { name: "Kenya", flag: "🇰🇪", cause: "Drought Support" },
+            { name: "Zimbabwe", flag: "🇿🇼", cause: "Crop Security" },
+            { name: "Lebanon", flag: "🇱🇧", cause: "Economic Crisis" }
+            // Adding more dynamically if needed...
+        ];
 
-        const currencySymbols = {
-            "USD": "$",
-            "INR": "₹",
-            "EUR": "€",
-            "GBP": "£",
-            "AUD": "A$"
-        };
+        // Init Slideshow
+        function initSlideshow() {
+            const container = document.getElementById('heroSlideshow');
+            slideshowImages.forEach((img, idx) => {
+                const div = document.createElement('div');
+                div.className = `slide ${idx === 0 ? 'active' : ''}`;
+                div.style.backgroundImage = `url('${img}')`;
+                container.appendChild(div);
+            });
 
-        function updateCurrencySymbol() {
-            const select = document.getElementById('currencySelector');
-            selectedCurrency = select.value;
-            selectedSymbol = currencySymbols[selectedCurrency];
-            
-            document.getElementById('customCurrencySymbol').innerText = selectedSymbol;
-            document.getElementById('resultAmount').innerText = selectedSymbol + "0.00";
+            let current = 0;
+            setInterval(() => {
+                const slides = document.querySelectorAll('.slide');
+                slides[current].classList.remove('active');
+                current = (current + 1) % slides.length;
+                slides[current].classList.add('active');
+            }, 2000); // 2 seconds interval
         }
 
-        function selectAmount(amount) {
-            selectedDonationAmount = amount;
-            document.getElementById('customAmount').value = amount;
-            
-            const buttons = document.querySelectorAll('.amount-btn');
-            buttons.forEach(btn => {
-                if(parseInt(btn.textContent) === amount) {
-                    btn.classList.add('bg-emerald-600', 'border-emerald-500', 'text-white', 'shadow-md');
-                    btn.classList.remove('border-slate-600');
-                } else {
-                    btn.classList.remove('bg-emerald-600', 'border-emerald-500', 'text-white', 'shadow-md');
-                    btn.classList.add('border-slate-600');
-                }
-            });
+        // Donation Logic
+        let donationAmt = 0;
+        function setAmount(a) {
+            donationAmt = a;
+            document.getElementById('customAmt').value = a;
         }
-
-        document.getElementById('customAmount').addEventListener('input', (e) => {
-            selectedDonationAmount = parseFloat(e.target.value);
-            document.querySelectorAll('.amount-btn').forEach(btn => {
-                if(parseInt(btn.textContent) === selectedDonationAmount) {
-                     btn.classList.add('bg-emerald-600', 'border-emerald-500', 'text-white', 'shadow-md');
-                     btn.classList.remove('border-slate-600');
-                } else {
-                    btn.classList.remove('bg-emerald-600', 'border-emerald-500', 'text-white', 'shadow-md');
-                    btn.classList.add('border-slate-600');
-                }
-            });
-        });
 
         function processDonation() {
-            const name = document.getElementById('donorName').value;
-            const email = document.getElementById('donorEmail').value;
-
-            if (!selectedDonationAmount || selectedDonationAmount <= 0) {
-                alert("Please select or enter a valid donation amount.");
-                return;
-            }
-            if (!name || !email) {
-                alert("Please enter your details.");
-                return;
-            }
-
-            const btn = event.currentTarget;
-            const originalHTML = btn.innerHTML;
-            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Processing...';
-            btn.disabled = true;
-
-            setTimeout(() => {
-                const trackingId = 'PATW-' + Math.floor(1000 + Math.random() * 9000);
-                
-                let remaining = selectedDonationAmount;
-                const distribution = [];
-                const shuffled = [...countriesData].sort(() => 0.5 - Math.random());
-                const selectedCountries = shuffled.slice(0, 3);
-
-                selectedCountries.forEach((country, index) => {
-                    let share;
-                    if (index === selectedCountries.length - 1) {
-                        share = remaining; 
-                    } else {
-                        share = Math.floor(selectedDonationAmount * (0.2 + Math.random() * 0.2));
-                        remaining -= share;
-                    }
-                    distribution.push({ ...country, amount: share });
-                });
-
-                const record = {
-                    id: trackingId,
-                    donor: name,
-                    total: selectedDonationAmount,
-                    currency: selectedSymbol,
-                    date: new Date().toLocaleDateString(),
-                    breakdown: distribution
-                };
-                
-                let allDonations = JSON.parse(localStorage.getItem('patw_donations')) || [];
-                allDonations.push(record);
-                localStorage.setItem('patw_donations', JSON.stringify(allDonations));
-
-                document.getElementById('modalTrackingId').innerText = trackingId;
-                const modal = document.getElementById('successModal');
-                modal.classList.remove('hidden');
-                void modal.offsetWidth; 
-                modal.classList.add('opacity-100');
-                modal.querySelector('div').classList.remove('scale-95');
-                modal.querySelector('div').classList.add('scale-100');
-
-                btn.innerHTML = originalHTML;
-                btn.disabled = false;
-                
-                document.getElementById('donorName').value = '';
-                document.getElementById('donorEmail').value = '';
-                document.getElementById('customAmount').value = '';
-                selectAmount(0);
-
-            }, 1500);
+            const amt = document.getElementById('customAmt').value;
+            if(!amt || amt <= 0) return alert("Enter amount");
+            
+            const id = "PATW-" + Math.floor(1000 + Math.random() * 9000);
+            
+            // Randomly pick 3 countries for tracking
+            const shuffled = [...countries].sort(() => 0.5 - Math.random());
+            const selection = shuffled.slice(0, 3).map(c => ({
+                ...c,
+                share: Math.floor(amt * (0.2 + Math.random() * 0.2))
+            }));
+            
+            const record = { id, total: amt, data: selection };
+            const saved = JSON.parse(localStorage.getItem('donations') || '[]');
+            saved.push(record);
+            localStorage.setItem('donations', JSON.stringify(saved));
+            
+            alert(`Donation Successful! Your ID: ${id}`);
         }
 
         function trackDonation() {
-            const inputId = document.getElementById('trackingInput').value.trim();
-            const resultDiv = document.getElementById('trackingResult');
-            const listDiv = document.getElementById('distributionList');
-
-            if (!inputId) return;
-
-            const allDonations = JSON.parse(localStorage.getItem('patw_donations')) || [];
-            const record = allDonations.find(d => d.id === inputId);
-
-            if (record) {
-                const symbol = record.currency || "$";
-                document.getElementById('resultId').innerText = record.id;
-                document.getElementById('resultAmount').innerText = symbol + record.total;
-                
-                listDiv.innerHTML = ''; 
-                
-                record.breakdown.forEach(item => {
-                    const percent = Math.round((item.amount / record.total) * 100);
-                    
-                    const html = `
-                        <div class="relative">
-                            <div class="flex mb-2 items-center justify-between">
-                                <div class="flex items-center gap-3">
-                                    <span class="text-3xl drop-shadow-sm filter grayscale hover:grayscale-0 transition duration-300 cursor-help" title="${item.name}">${item.flag}</span>
-                                    <div>
-                                        <div class="flex items-center gap-2">
-                                            <span class="font-bold text-slate-800">${item.name}</span>
-                                            <span class="text-[10px] font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded border border-blue-100">Verified</span>
-                                        </div>
-                                        <div class="text-xs text-slate-500 font-medium mt-0.5">${item.cause}</div>
-                                    </div>
-                                </div>
-                                <div class="text-right">
-                                    <span class="text-sm font-bold block text-slate-800">
-                                        ${symbol}${item.amount}
-                                    </span>
-                                    <span class="text-xs text-slate-400 font-medium">${percent}% of total</span>
-                                </div>
-                            </div>
-                            <div class="overflow-hidden h-2.5 mb-1 text-xs flex rounded-full bg-slate-100 border border-slate-200">
-                                <div style="width:${percent}%" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center ${item.color} bg-opacity-90 transition-all duration-1000 w-0 ease-out" onload="this.style.width='${percent}%'"></div>
-                            </div>
+            const id = document.getElementById('trackingInput').value.trim();
+            const saved = JSON.parse(localStorage.getItem('donations') || '[]');
+            const found = saved.find(d => d.id === id);
+            
+            if(!found) return alert("ID not found!");
+            
+            document.getElementById('resultId').innerText = found.id;
+            document.getElementById('resultAmount').innerText = "$" + found.total;
+            
+            const list = document.getElementById('distributionList');
+            list.innerHTML = found.data.map(item => `
+                <div class="bg-white p-4 rounded-2xl border border-slate-200 flex items-center justify-between shadow-sm">
+                    <div class="flex items-center gap-4">
+                        <span class="track-flag">${item.flag}</span>
+                        <div>
+                            <p class="font-bold text-slate-800">${item.name}</p>
+                            <p class="text-xs text-slate-500">${item.cause}</p>
                         </div>
-                    `;
-                    listDiv.innerHTML += html;
-                });
-
-                resultDiv.classList.remove('hidden');
-                setTimeout(() => {
-                    resultDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }, 100);
-            } else {
-                alert("Tracking ID not found. Please try donating first!");
-                resultDiv.classList.add('hidden');
-            }
+                    </div>
+                    <div class="text-right">
+                        <p class="font-bold text-emerald-600">$${item.share}</p>
+                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Arrived</p>
+                    </div>
+                </div>
+            `).join('');
+            
+            document.getElementById('trackingResult').classList.remove('hidden');
         }
 
-        function closeModal() {
-            const modal = document.getElementById('successModal');
-            modal.classList.remove('opacity-100');
-            modal.classList.add('opacity-0');
-            setTimeout(() => {
-                modal.classList.add('hidden');
-            }, 300);
+        // Donor List Feature
+        const mockDonors = [
+            { name: "Sarah K.", country: "🇺🇸", amt: "$50", time: "2 mins ago" },
+            { name: "Rahul S.", country: "🇮🇳", amt: "$100", time: "5 mins ago" },
+            { name: "Emma W.", country: "🇬🇧", amt: "$25", time: "12 mins ago" },
+            { name: "Jean P.", country: "🇫🇷", amt: "$200", time: "20 mins ago" },
+            { name: "Yuki M.", country: "🇯🇵", amt: "$10", time: "45 mins ago" },
+            { name: "Ahmed L.", country: "🇦🇪", amt: "$500", time: "1 hour ago" },
+            { name: "Sofia G.", country: "🇧🇷", amt: "$30", time: "2 hours ago" }
+        ];
+
+        function showDonorList() {
+            const list = document.getElementById('donorListItems');
+            list.innerHTML = mockDonors.map(d => `
+                <div class="flex items-center justify-between p-3 bg-slate-50 rounded-xl">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 font-bold">${d.name[0]}</div>
+                        <div>
+                            <p class="font-bold text-sm text-slate-800">${d.name} ${d.country}</p>
+                            <p class="text-[10px] text-slate-400">${d.time}</p>
+                        </div>
+                    </div>
+                    <p class="font-bold text-emerald-600">${d.amt}</p>
+                </div>
+            `).join('');
+            
+            const modal = document.getElementById('donorModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
         }
 
-        function copyToClipboard(element) {
-            const text = element.innerText;
-            navigator.clipboard.writeText(text).then(() => {
-                // Flash feedback visual could go here
-                alert("Copied to clipboard!");
-            });
+        function hideDonorList() {
+            document.getElementById('donorModal').classList.add('hidden');
         }
 
-        // --- Live Ticker Logic ---
-        function startLiveTicker() {
+        // Live Ticker Simulation
+        function runTicker() {
             const ticker = document.getElementById('liveTicker');
-            const flagEl = document.getElementById('tickerFlag');
-            const amtEl = document.getElementById('tickerAmount');
-            const countryEl = document.getElementById('tickerCountry');
-            const causeEl = document.getElementById('tickerCause');
-
-            // Initial delay
-            setTimeout(showNextDonation, 3000);
-
-            function showNextDonation() {
-                // Pick random data
-                const randomCountry = countriesData[Math.floor(Math.random() * countriesData.length)];
-                const randomAmount = [10, 25, 50, 100, 20][Math.floor(Math.random() * 5)];
+            setInterval(() => {
+                const c = countries[Math.floor(Math.random() * countries.length)];
+                document.getElementById('tickerFlag').innerText = c.flag;
+                document.getElementById('tickerCountry').innerText = c.name;
+                document.getElementById('tickerAmt').innerText = "$" + [10, 25, 50, 100][Math.floor(Math.random() * 4)];
                 
-                // Update DOM
-                flagEl.innerText = randomCountry.flag;
-                amtEl.innerText = "$" + randomAmount;
-                countryEl.innerText = randomCountry.name;
-                causeEl.innerText = randomCountry.cause;
-
-                // Show
                 ticker.classList.add('show');
-
-                // Hide after 5 seconds
-                setTimeout(() => {
-                    ticker.classList.remove('show');
-                    // Schedule next one in random time (4-10s)
-                    setTimeout(showNextDonation, Math.random() * 6000 + 4000);
-                }, 5000);
-            }
-        }
-        
-        function hideTicker() {
-            document.getElementById('liveTicker').style.display = 'none';
+                setTimeout(() => ticker.classList.remove('show'), 4000);
+            }, 8000);
         }
 
-        // Start Ticker on Load
-        window.addEventListener('load', startLiveTicker);
-
+        window.onload = () => {
+            initSlideshow();
+            runTicker();
+        };
     </script>
 </body>
 </html>
